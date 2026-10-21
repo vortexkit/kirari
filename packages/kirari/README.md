@@ -2,7 +2,7 @@
 
 A small, dependency-free syntax highlighter. Kirari turns source code into
 escaped HTML or a token array on the server, at build time, or in the browser,
-without a DOM. The default bundle is about 4.3 KB gzipped; 48 language
+without a DOM. The default bundle is about 4.2 KB gzipped; 48 language
 definitions and 21 CSS-variable themes are available as separate imports.
 It is a lexical highlighter, not a parser.
 
@@ -329,13 +329,13 @@ The core fixture includes an exported API object; the all-language fixture also
 retains a language registry so that no language gets removed as unused. Theme
 CSS is excluded. These are bundle sizes, not throughput benchmarks.
 
-Measured on 2026-10-17 using Bun 1.3.11:
+Measured on 2026-10-22 using Bun 1.3.4:
 
 | Entry | Minified bytes | Gzip bytes |
 | --- | ---: | ---: |
-| Core API | 3,439 | 1,717 |
-| JavaScript default | 4,648 | 2,240 |
-| All 48 languages | 51,964 | 16,044 |
+| Core API | 8,505 | 3,728 |
+| JavaScript default | 9,678 | 4,247 |
+| All 48 languages | 68,465 | 22,960 |
 
 ## Development
 

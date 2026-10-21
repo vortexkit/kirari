@@ -58,7 +58,7 @@ const scanLanguage = (language: Language): Language => {
   return builtIn
 }
 
-// Resume points are whitespace tokens containing a newline, outside f-strings, with more source after them.
+// Resume points are whitespace at unescaped line breaks, outside f-strings, with more source after them.
 const scanPython: ResumableScan = (source, language, from, checkpoint) => {
   const tokens: Token[] = []
   const frames: PythonFrame[] = [{ kind: 'expression', depth: 0, root: true }]
@@ -105,7 +105,10 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
     if (checkpoint && frames.length === 1 && token.type === 'text' && /[\r\n]/.test(token.value) && token.end < source.length) {
       const last = tokens[tokens.length - 1]
       const merged = last?.type === 'text'
-      checkpoint({ offset: merged ? last.start : position, previous }, merged ? tokens.length - 1 : tokens.length)
+      // A backslash in source text continues the line; one inside a comment does not.
+      if (!merged || !last.value.endsWith('\\')) {
+        checkpoint({ offset: merged ? last.start : position, previous }, merged ? tokens.length - 1 : tokens.length)
+      }
     }
     const opening = token.type === fstringOpening.type && /^(f|fr|rf)("""|'''|"|')$/i.exec(token.value)
     if (opening) {

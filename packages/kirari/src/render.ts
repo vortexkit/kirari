@@ -1,16 +1,10 @@
 import type { RenderOptions, Token } from './types.js'
 
-export const escape = (value: string): string => {
-  return value.replace(/[&<>"']/g, char => {
-    switch (char) {
-      case '&': return '&amp;'
-      case '<': return '&lt;'
-      case '>': return '&gt;'
-      case '"': return '&quot;'
-      default: return '&#39;'
-    }
-  })
+const entities: Readonly<Record<string, string>> = {
+  '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
 }
+
+export const escape = (value: string): string => value.replace(/[&<>"']/g, char => entities[char]!)
 
 /** Extra classes for a token from the `classes` map and the `className` callback. */
 export const tokenClasses = (token: Token, options: RenderOptions): string => {

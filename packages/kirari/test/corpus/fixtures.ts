@@ -400,4 +400,32 @@ export const corpus: readonly CorpusFixture[] = [
       { text: '${PORT:-${FALLBACK}}', type: 'variable' },
     ],
   },
+  {
+    id: 'javascript-decorators', language: 'javascript',
+    source: '@sealed\n@factory()\nclass Parcel {}',
+    assertions: [
+      { text: '@', type: 'operator', occurrence: 0 }, { text: '@', type: 'operator', occurrence: 1 },
+      { text: 'sealed', type: 'function' }, { text: 'factory', type: 'function' },
+      { text: 'class', type: 'keyword' }, { text: 'Parcel', type: 'type' },
+    ],
+  },
+  {
+    id: 'typescript-qualified-decorator', language: 'typescript',
+    source: '@registry /* namespace */ .sealed\nclass Parcel {}',
+    assertions: [
+      { text: '@', type: 'operator' }, { text: 'registry', type: 'variable' },
+      { text: '/* namespace */', type: 'comment' }, { text: 'sealed', type: 'property' },
+      { text: 'Parcel', type: 'type' },
+    ],
+  },
+  {
+    id: 'python-decorators-and-matrix-multiplication', language: 'python',
+    source: '@dataclass\n@registry.sealed()\nclass Parcel:\n    result = left @ right',
+    assertions: [
+      { text: '@', type: 'operator', occurrence: 0 }, { text: '@', type: 'operator', occurrence: 1 },
+      { text: '@', type: 'operator', occurrence: 2 }, { text: 'dataclass', type: 'function' },
+      { text: 'registry', type: 'variable' }, { text: 'sealed', type: 'property' },
+      { text: 'Parcel', type: 'type' }, { text: 'left', type: 'variable' }, { text: 'right', type: 'variable' },
+    ],
+  },
 ]

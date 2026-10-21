@@ -16,7 +16,7 @@ Modern ESM runtimes with ES2022 features are required. The library has no DOM, N
 
 ## Bundle measurements
 
-The JavaScript entry measures 4,292 bytes gzip; all 48 definitions together measure 22,900 bytes gzip. Measured with Bun 1.3.11 minification and gzip level 9, excluding CSS. These are library bundle sizes, not website sizes or throughput benchmarks.
+The JavaScript entry measures 4,247 bytes gzip; all 48 definitions together measure 22,960 bytes gzip. Measured on 2026-10-22 with Bun 1.3.4 minification and gzip level 9, excluding CSS. These are library bundle sizes, not website sizes or throughput benchmarks.
 
 To reproduce, run `bun run size` in the Kirari repository.
 
