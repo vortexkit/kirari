@@ -39,6 +39,15 @@ test('highlightLines wraps lines and marks single lines and ranges', () => {
   expect(marked).toEqual([1, 3, 4])
 })
 
+test('line class callbacks run before line selections are evaluated', () => {
+  const range: [number, number] = [2, 2]
+  const html = renderToStaticMarkup(<Code highlightLines={[range]} lineClassName={line => {
+    if (line.number === 1) range[0] = 1
+    return undefined
+  }}>{'a\nb'}</Code>)
+  expect(html).toContain('class="kirari-line kirari-line-highlighted" data-line="1"')
+})
+
 test('accepts pre-scanned tokens and rejects gaps', () => {
   const tokens = tokenize('x = 1', python)
   expect(renderToStaticMarkup(<Code tokens={tokens} />)).toContain('kirari-number')
