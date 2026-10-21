@@ -1,5 +1,14 @@
 # @vortexlabs/kirari
 
+## 1.1.1
+
+### Patch Changes
+
+- c40b706: Highlight TypeScript enum declaration names as types.
+- 8da3031: Highlight JavaScript, TypeScript, and Python decorator markers as operators and bare decorator names as functions, while preserving qualified names and Python matrix multiplication.
+  
+  Reduce bundle overhead by consolidating function lookahead, simplifying equivalent JavaScript regexes, and sharing HTML escape replacements.
+
 ## 1.1.0
 
 ### Minor Changes
