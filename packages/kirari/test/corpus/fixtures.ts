@@ -134,6 +134,17 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'typescript-enum-declaration-names', language: 'typescript',
+    source: 'enum Color { Red, Blue }\ndeclare enum D { Up }\ninterface I {}\nabstract class A {}\ntype K = string;',
+    assertions: [
+      { text: 'enum', type: 'keyword', occurrence: 0 }, { text: 'Color', type: 'type' },
+      { text: 'enum', type: 'keyword', occurrence: 1 }, { text: 'D', type: 'type' },
+      { text: 'interface', type: 'keyword' }, { text: 'I', type: 'type' },
+      { text: 'class', type: 'keyword' }, { text: 'A', type: 'type' },
+      { text: 'type', type: 'keyword' }, { text: 'K', type: 'type' },
+    ],
+  },
+  {
     id: 'tsx-component-props', language: 'tsx',
     source: 'const panel: unknown = <Notice tone="quiet" hidden={false} onOpen={() => reveal(record.id)}>Ready &amp; waiting</Notice>;',
     assertions: [

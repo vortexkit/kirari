@@ -232,7 +232,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       else if (booleans.has(name)) type = 'boolean'
       else if (nulls.has(name)) type = 'null'
       // Built-in types, class names, and names in TypeScript type positions.
-      else if (types.has(name) || previous?.value === 'class' || typed && (context.annotation || previous?.type === 'keyword' && /^(type|interface)$/.test(previous.value))) type = 'type'
+      else if (types.has(name) || previous?.value === 'class' || typed && (context.annotation || previous?.type === 'keyword' && /^(type|interface|enum)$/.test(previous.value))) type = 'type'
       else if ((previous?.value === '{' || previous?.value === ',') && nextVisibleChar(source, end) === ':') type = 'property' // { name: value }
       else if (nextVisibleChar(source, end) === '(') type = 'function' // name(…)
       // Look ahead for definitions such as `name = () => …` or `name: function () {}`.
