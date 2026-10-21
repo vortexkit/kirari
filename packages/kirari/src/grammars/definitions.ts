@@ -195,7 +195,10 @@ export const classifyDefinitions = (tokens: Token[], language: string, open: rea
     const qualified = followsDeclaration && /^(\.|:)$/.test(value(qualifierEnd + 1))
     if (qualified) qualifiers.add(qualifierEnd)
     const declared = followsDeclaration && !qualified
-    let isFunction = declared
+    // Decorators start a logical line outside brackets; matrix multiplication does not.
+    const decorated = language === 'python' && value(index - 1) === '@' && value(index + 1) !== '.' && !lineBreakBefore(index)
+      && !parents.has(index - 1) && (index === 1 || lineBreakBefore(index - 1))
+    let isFunction = declared || decorated
     const member = /^(\.|\?\.|->|\?->|::)$/.test(value(index - 1))
     let next = index + 1
     if (!declared && token.type !== 'variable' && token.type !== 'property') continue

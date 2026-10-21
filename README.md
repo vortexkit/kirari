@@ -5,7 +5,7 @@ TypeScript apps. It turns source code into escaped HTML or a token array on the
 server, at build time, or in the browser, without a DOM. It is a lexical
 highlighter, not a parser.
 
-- **Small:** about 4.3 KB gzipped with JavaScript, about 23 KB with all 48 languages.
+- **Small:** about 4.2 KB gzipped with JavaScript, about 23 KB with all 48 languages.
 - **Streaming:** emits token patches as code arrives, such as LLM output.
 - **Themeable:** CSS-variable themes, with 21 built in.
 - **Integrations:** a React `<Code>` component that works in Server Components,

@@ -243,10 +243,10 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       // `pending` means the answer depends on source that has not arrived yet (streaming).
       if (lookup && !member && (type === 'variable' || type === 'property' || context.functionName || method || /^(async|get|set|static)$/.test(name))) {
         const found = lookup(end, {
-          annotation: typed && variableKeyword.test(previous?.value ?? ''),
+          colon: type === 'property' || method || typed && variableKeyword.test(previous?.value ?? ''),
           generic: !!context.functionName || method,
-          property: type === 'property' || method,
           asyncModifier: name === 'async' && !context.functionName && !method,
+          decorator: previous?.value === '@',
         })
         if (found.function) type = 'function'
         if (found.pending) context.functionPending = true

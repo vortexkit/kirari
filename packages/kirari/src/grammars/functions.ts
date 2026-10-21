@@ -9,14 +9,14 @@ export interface FunctionLookupCache {
   lastLine?: number
 }
 export interface LookupOptions {
-  /** The name follows `const`, `let`, or `var` in TypeScript, so `:` starts a type annotation. */
-  readonly annotation: boolean
+  /** A colon after the name may introduce a property value or a typed binding. */
+  readonly colon: boolean
   /** The name may take type parameters, as after `function` or in a method position. */
   readonly generic: boolean
-  /** The name is an object or class member. */
-  readonly property: boolean
   /** The name is a bare `async` that may be an arrow-function modifier. */
   readonly asyncModifier: boolean
+  /** The name follows `@`; a member-access suffix instead makes it a namespace. */
+  readonly decorator: boolean
 }
 
 const closers: Record<string, string> = { '(': ')', '[': ']', '{': '}', '${': '}', '<': '>' }
@@ -32,16 +32,15 @@ const closers: Record<string, string> = { '(': ')', '[': ']', '{': '}', '${': '}
 export const createFunctionLookup = (source: string, typed: boolean, scan: (start: number) => Generator<Token, void, number | undefined>, cache: FunctionLookupCache = {}) => {
   // Reuse nested groups, including unfinished ones, instead of rescanning each signature suffix.
   const groups = new Map<number, Group>()
-  return (start: number, { annotation, generic, property, asyncModifier }: LookupOptions): Result => {
+  return (start: number, { colon: acceptsColon, generic, asyncModifier, decorator }: LookupOptions): Result => {
     let reader = scan(start)
     let token: Token | undefined
     let limit = source.length
     let pending = false
-    // Wraps an answer, marking it pending when it relied on reaching the end of the source.
-    const result = (value: boolean): Result => ({ function: value, pending: pending || limit === source.length && (!token || token.end === limit && /^[=/]$/.test(token.value)) })
     const is = (value: string): boolean => token?.value === value
-    // Advances `token` to the next significant token before `limit`.
-    const next = (): void => {
+    // Advances `token`, optionally restarting at a source offset.
+    const next = (position?: number): void => {
+      if (position !== undefined) reader = scan(position)
       do {
         const value = reader.next()
         token = value.done || value.value.start >= limit ? undefined : value.value
@@ -52,13 +51,11 @@ export const createFunctionLookup = (source: string, typed: boolean, scan: (star
         }
       } while (token && !isSignificant(token.type))
     }
-    // Restarts scanning at `position`.
-    const jump = (position: number): void => { reader = scan(position); next() }
     // Consumes the bracket group opening at `token`, including `<…>` and `>>` splits; results are cached.
     const group = (): Group => {
       const opening = token!
       const cached = groups.get(opening.start)
-      if (cached) { jump(cached.end); return cached }
+      if (cached) { next(cached.end); return cached }
       const angles = opening.value === '<'
       const stack: { token: Token; close: string }[] = []
       while (token) {
@@ -76,7 +73,7 @@ export const createFunctionLookup = (source: string, typed: boolean, scan: (star
             }
             const closed = { end: token.start + index + 1, complete: true }
             groups.set(frame.token.start, closed)
-            if (!stack.length) { jump(closed.end); return closed }
+            if (!stack.length) { next(closed.end); return closed }
           }
         }
         next()
@@ -114,64 +111,74 @@ export const createFunctionLookup = (source: string, typed: boolean, scan: (star
       return false
     }
 
-    next()
-    // Optional or definite members: `name?()`, `name!: T`.
-    if (typed && generic && token && /^[?!]$/.test(token.value)) next()
-    // `name(` is a call or definition; for `async (x) => …` the name is a modifier, not a function.
-    if (is('(')) {
-      if (!asyncModifier) return result(true)
-      if (!group().complete) return result(false)
-      return result(!is('=>') && !(typed && is(':')))
-    }
-    if (typed && is('<') && (generic || token!.start === start)) {
-      if (!group().complete) return result(false)
-      return result(is('('))
-    }
-    // Otherwise the name must be bound: `name = …`, or `name: …` for properties and annotations.
-    if (!is('=') && !is(':')) return result(false)
-    const colon = is(':')
-    if (colon && !annotation && !property) return result(false)
-    next()
-    if (typed && (annotation || property) && colon && token && !/^(\(|<|async|function)$/.test(token.value)) {
-      if (!until('=')) return result(false)
+    const inspect = (): boolean => {
       next()
-    }
-
-    // Inspect the bound value; parenthesized expressions are re-entered with a narrower limit.
-    while (token) {
-      if (is('async')) {
-        next()
-        if (is('=>')) return result(true)
+      if (decorator) {
+        // A trailing `?` or one/two dots may become a different operator in the next chunk.
+        pending ||= !!token && token.start >= source.length - 2 && (is('.') || is('?'))
+        return !is('.') && !is('?.')
       }
-      if (is('function')) {
-        next()
-        if (is('*')) next()
-        if (token && /^(variable|keyword|function)$/.test(token.type)) next()
-        if (typed && is('<') && !group().complete) return result(true)
-        if (!is('(') || !group().complete) return result(true)
-        if (typed && is(':')) { next(); if (!body()) return result(true) }
-        if (!is('{') || !group().complete) return result(true)
-        return result(continuation())
-      }
-      if (typed && is('<') && !group().complete) return result(false)
+      // Optional or definite members: `name?()`, `name!: T`.
+      if (typed && generic && token && /^[?!]$/.test(token.value)) next()
+      // `name(` is a call or definition; for `async (x) => …` the name is a modifier, not a function.
       if (is('(')) {
-        const opening = token
-        const closed = group()
-        if (!closed.complete) return result(false)
-        if (is('=>')) return result(true)
-        if (typed && is(':')) { next(); return result(until('=>')) }
-        if (!continuation()) return result(false)
-        pending ||= !token && limit === source.length
-        limit = closed.end - 1
-        jump(opening.end)
-        continue
+        if (!asyncModifier) return true
+        if (!group().complete) return false
+        return !is('=>') && !(typed && is(':'))
       }
-      if (token && /^(variable|keyword|function)$/.test(token.type)) {
+      if (typed && is('<') && (generic || token!.start === start)) {
+        if (!group().complete) return false
+        return is('(')
+      }
+      // Otherwise the name must be bound: `name = …`, or `name: …` for properties and annotations.
+      if (!is('=') && !is(':')) return false
+      const colon = is(':')
+      if (colon && !acceptsColon) return false
+      next()
+      if (typed && acceptsColon && colon && token && !/^(\(|<|async|function)$/.test(token.value)) {
+        if (!until('=')) return false
         next()
-        return result(is('=>'))
       }
-      return result(false)
+
+      // Inspect the bound value; parenthesized expressions are re-entered with a narrower limit.
+      while (token) {
+        if (is('async')) {
+          next()
+          if (is('=>')) return true
+        }
+        if (is('function')) {
+          next()
+          if (is('*')) next()
+          if (token && /^(variable|keyword|function)$/.test(token.type)) next()
+          if (typed && is('<') && !group().complete) return true
+          if (!is('(') || !group().complete) return true
+          if (typed && is(':')) { next(); if (!body()) return true }
+          if (!is('{') || !group().complete) return true
+          return continuation()
+        }
+        if (typed && is('<') && !group().complete) return false
+        if (is('(')) {
+          const opening = token
+          const closed = group()
+          if (!closed.complete) return false
+          if (is('=>')) return true
+          if (typed && is(':')) { next(); return until('=>') }
+          if (!continuation()) return false
+          pending ||= !token && limit === source.length
+          limit = closed.end - 1
+          next(opening.end)
+          continue
+        }
+        if (token && /^(variable|keyword|function)$/.test(token.type)) {
+          next()
+          return is('=>')
+        }
+        return false
+      }
+      return false
     }
-    return result(false)
+    const found = inspect()
+    // EOF-dependent answers remain provisional until more source arrives.
+    return { function: found, pending: pending || limit === source.length && (!token || token.end === limit && /^[=/]$/.test(token.value)) }
   }
 }
