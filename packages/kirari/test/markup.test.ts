@@ -146,6 +146,32 @@ test('literal angle brackets in markup prose do not start tags', () => {
   expect(tokenize(source, html).map(t => t.value).join('')).toBe(source)
 })
 
+test('tag dispatch preserves question marks and slashes outside closing delimiters', () => {
+  const source = '<x ?query="yes" / loose=?value></x>'
+  const result = pairs(source, xml)
+  expect(result).toContainEqual(['attribute', '?query'])
+  expect(result).toContainEqual(['attribute', 'loose'])
+  expect(result).toContainEqual(['string', '?value'])
+  expect(result.filter(([type]) => type === 'tag').map(([, value]) => value)).toEqual(['x', 'x'])
+  expect(tokenize(source, xml).map(token => token.value).join('')).toBe(source)
+})
+
+test('XML declarations keep quoted delimiters and internal subsets opaque', () => {
+  const declaration = '<!DOCTYPE root [<!ENTITY value "a>b">]>'
+  const result = pairs(declaration + '<root />', xml)
+  expect(result[0]).toEqual(['keyword', declaration])
+  expect(result.filter(([type]) => type === 'tag')).toEqual([['tag', 'root']])
+})
+
+test('unfinished declarations include trailing line terminators', () => {
+  for (const ending of ['\n', '\r\n', '\u2028', '\u2029']) {
+    for (const [opening, type] of [['<!--', 'comment'], ['<![CDATA[', 'string'], ['<?', 'keyword'], ['<!DOCTYPE root "', 'keyword']] as const) {
+      const source = opening + 'unfinished' + ending
+      expect(pairs(source, xml)).toEqual([[type, source]])
+    }
+  }
+})
+
 for (const language of [jsx, tsx, html, xml]) {
   test(`${language.name} preserves malformed input and offsets`, () => {
     for (const source of ['', '🙂\r\n<div title="unfinished', '<div>{`hi ${x', '<><A /></>', '<!-- incomplete', '<<<', '<x a={"}"}>text</x>', '<div>{\n/*comment*/\n}</div>']) {
