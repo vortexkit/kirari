@@ -18,6 +18,7 @@ import { isSignificant } from './types.js'
 import type { Language, Token } from './types.js'
 import { createFunctionLookup } from './grammars/functions.js'
 import type { FunctionLookupCache } from './grammars/functions.js'
+import { canStartRegex, escapedIdentifierEnd, nextVisibleChar, regexEnd, templateChunk } from './scanner/lexical.js'
 
 export type Frame = { kind: 'template'; opening: boolean } | { kind: 'expression'; depth: number }
 /** Lexical state for JavaScript-like languages, carried between scanner steps. */
@@ -43,15 +44,14 @@ const sticky = (pattern: RegExp): RegExp => {
   return new RegExp(pattern.source, pattern.flags.replace(/[gy]/g, '') + 'y')
 }
 
-const classify = (tokens: Token[], language: Language): Token[] => {
-  return language.definitions ? language.definitions(tokens) : tokens
-}
-
 export const tokenize = (source: string, language: Language): Token[] => {
-  if (language.tokenize) return classify(language.tokenize(source, language), language)
-  const tokens: Token[] = []
-  for (const token of scan(source, language)) appendToken(tokens, token)
-  return classify(tokens, language)
+  let tokens: Token[]
+  if (language.tokenize) tokens = language.tokenize(source, language)
+  else {
+    tokens = []
+    for (const token of scan(source, language)) appendToken(tokens, token)
+  }
+  return language.definitions ? language.definitions(tokens) : tokens
 }
 
 /**
@@ -77,7 +77,7 @@ export const scanWithOverrides = (source: string, language: Language, override: 
 
 /** Appends a token, merging adjacent text into one token. */
 export const appendToken = (tokens: Token[], token: Token): void => {
-  const last = tokens[tokens.length - 1]
+  const last = tokens.at(-1)
   if (token.type === 'text' && last?.type === 'text') {
     tokens[tokens.length - 1] = { ...last, value: last.value + token.value, end: token.end }
   } else tokens.push(token)
@@ -106,7 +106,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
     const value = source.slice(position, end)
     const token = { type, value, start: position, end }
     // A `${` expression inside a template ends at its matching `}`.
-    const frame = frames[frames.length - 1]
+    const frame = frames.at(-1)
     if (type === 'punctuation' && frame?.kind === 'expression') {
       if (value === '{') frame.depth++
       if (value === '}') {
@@ -139,12 +139,13 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
           context.scopes ??= []
           context.scopes.push(!!context.classBody || expressionStart.test(previous?.value ?? ''))
           context.classBody = false
+          context.braces = (context.braces ?? 0) + 1
+        } else if (value === '}') {
+          context.scopes?.pop()
+          context.braces = Math.max(0, (context.braces ?? 0) - 1)
         }
-        if (value === '}') context.scopes?.pop()
         if (type === 'keyword' && /^(class|interface)$/.test(value)) context.classBody = true
         context.functionName = type === 'keyword' && value === 'function' || !!context.functionName && value === '*'
-        if (opensBrace) context.braces = (context.braces ?? 0) + 1
-        if (value === '}') context.braces = Math.max(0, (context.braces ?? 0) - 1)
         if (value === '(') context.parentheses.push({ control: previous?.type === 'keyword' && controlKeyword.test(previous.value) || !!context.forAwait, braces: context.braces ?? 0 })
         context.afterControl = value === ')' && !!context.parentheses.pop()?.control
         context.forAwait = value === 'await' && previous?.type === 'keyword' && previous.value === 'for'
@@ -176,7 +177,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
     }
     pending = []
     if (position >= source.length) break
-    const frame = frames[frames.length - 1]
+    const frame = frames.at(-1)
     if (frame?.kind === 'template') {
       const { end, closed } = templateChunk(source, position + (frame.opening ? 1 : 0))
       frame.opening = false
@@ -233,8 +234,11 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       else if (nulls.has(name)) type = 'null'
       // Built-in types, class names, and names in TypeScript type positions.
       else if (types.has(name) || previous?.value === 'class' || typed && (context.annotation || previous?.type === 'keyword' && /^(type|interface|enum)$/.test(previous.value))) type = 'type'
-      else if ((previous?.value === '{' || previous?.value === ',') && nextVisibleChar(source, end) === ':') type = 'property' // { name: value }
-      else if (nextVisibleChar(source, end) === '(') type = 'function' // name(…)
+      else {
+        const following = nextVisibleChar(source, end)
+        if ((previous?.value === '{' || previous?.value === ',') && following === ':') type = 'property' // { name: value }
+        else if (following === '(') type = 'function' // name(…)
+      }
       // Look ahead for definitions such as `name = () => …` or `name: function () {}`.
       // `pending` means the answer depends on source that has not arrived yet (streaming).
       if (lookup && !member && (type === 'variable' || type === 'property' || context.functionName || method || /^(async|get|set|static)$/.test(name))) {
@@ -257,81 +261,8 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
   yield* pending
 }
 
-
 const variableKeyword = /^(const|let|var)$/
 const controlKeyword = /^(if|while|for|with|switch|catch)$/
 const methodPrefix = /^(\{|\}|,|;|\*|async|static|get|set|public|private|protected|abstract|override)$/
 // Values after which `{` opens an object literal rather than a block.
 const expressionStart = /^(=|\(|\[|,|:|return|yield)$/
-const unicodeEscape = /\\u(?:([\da-fA-F]{4})|\{([\da-fA-F]{1,6})\})/y
-const continuation = /[$\u200c\u200d\p{ID_Continue}]+/uy
-
-const spaces = /\s*/y
-
-/** The first non-whitespace character at or after `index`. */
-const nextVisibleChar = (source: string, index: number): string | undefined => {
-  spaces.lastIndex = index
-  spaces.test(source)
-  return source[spaces.lastIndex]
-}
-
-// Scans template text up to the next `${`, the closing backtick, or the end of source.
-const templateChunk = (source: string, start: number): { end: number; closed: boolean } => {
-  let end = start
-  while (end < source.length) {
-    if (source[end] === '\\') end = Math.min(end + 2, source.length)
-    else if (source[end] === '`') return { end: end + 1, closed: true }
-    else if (source.startsWith('${', end)) break
-    else end++
-  }
-  return { end, closed: false }
-}
-
-// Extends an identifier through `\\u` escapes that decode to valid identifier characters.
-const escapedIdentifierEnd = (source: string, start: number, end: number): number => {
-  while (source[end] === '\\') {
-    unicodeEscape.lastIndex = end
-    const escape = unicodeEscape.exec(source)
-    if (!escape) break
-    const value = parseInt(escape[1] ?? escape[2]!, 16)
-    const point = value <= 0x10ffff ? String.fromCodePoint(value) : ' '
-    if (!(end === start ? /^[$_\p{ID_Start}]$/u : /^[$\u200c\u200d\p{ID_Continue}]$/u).test(point)) break
-    end += escape[0].length
-    continuation.lastIndex = end
-    const suffix = continuation.exec(source)
-    if (suffix?.index === end) end += suffix[0].length
-  }
-  return end
-}
-
-const canStartRegex = (previous: Token | undefined): boolean => {
-  if (!previous) return true
-  if (previous.type === 'property') return false
-  // shortcut: lexical context cannot resolve every slash; use a parser for semantic accuracy.
-  return /^(?:[([{,:;=!?&|+*%~<>^-]|\$\{|=>|&&|\|\||\?\?|===?|!==?|[+*/%&|^-]=|return|throw|case|delete|void|typeof|yield|await|in|of)$/.test(previous.value)
-}
-
-const regexEnd = (source: string, start: number, failed: Set<number>): number => {
-  let inClass = false
-  const visited: number[] = []
-  for (let end = start + 1; end < source.length; end++) {
-    const state = end * 2 + Number(inClass)
-    if (failed.has(state)) break
-    visited.push(state)
-    const char = source[end]
-    if (char === '\n' || char === '\r' || char === '\u2028' || char === '\u2029') break
-    if (char === '\\') {
-      if (/[\r\n\u2028\u2029]/.test(source[end + 1] ?? '')) break
-      end++
-    } else if (char === '[') inClass = true
-    else if (char === ']') inClass = false
-    else if (char === '/' && !inClass) {
-      end++
-      while (end < source.length && /[a-z]/i.test(source[end]!)) end++
-      return end
-    }
-  }
-  // Failed states prevent repeated scans of malformed input such as /[/[/[.
-  for (const state of visited) failed.add(state)
-  return start
-}

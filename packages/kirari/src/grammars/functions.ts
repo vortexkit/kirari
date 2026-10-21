@@ -1,5 +1,6 @@
 import { isSignificant } from '../types.js'
 import type { Token } from '../types.js'
+import { lastLineBreak } from '../scanner/lexical.js'
 
 type Result = { function: boolean; pending: boolean }
 type Group = { end: number; complete: boolean }
@@ -19,17 +20,6 @@ export interface LookupOptions {
 }
 
 const closers: Record<string, string> = { '(': ')', '[': ']', '{': '}', '${': '}', '<': '>' }
-
-/** Index of the last line break in `source`, or -1. */
-const lastLineBreak = (source: string): number => {
-  let index = source.length - 1
-  while (index >= 0) {
-    const char = source.charCodeAt(index)
-    if (char === 10 || char === 13 || char === 0x2028 || char === 0x2029) break
-    index--
-  }
-  return index
-}
 
 /**
  * Creates a look-ahead that decides whether the name ending at `start` is a function:
