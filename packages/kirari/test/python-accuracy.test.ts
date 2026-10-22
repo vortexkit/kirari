@@ -4,6 +4,34 @@ import { python } from '../src/languages/python.js'
 
 const pairs = (source: string) => tokenize(source, python).map(token => [token.type, token.value])
 
+test.each([
+  'def f(a: str, b: str): pass',
+  'def f(a, b: str): pass',
+  'def f(a: str, b): pass',
+  'async def f(a: tuple[int, str], b: str): pass',
+  'def f(a={k1: 1, k2: 2}, b: str): pass',
+  'def f(\n    a: str, # first\n    b: str,\n): pass',
+])('Python keeps annotated parameters as variables in %j', source => {
+  const result = pairs(source)
+  for (const name of ['a', 'b']) {
+    expect(result).toContainEqual(['variable', name])
+    expect(result).not.toContainEqual(['property', name])
+  }
+})
+
+test('Python distinguishes dictionary keys, members, and lambda parameters in nested expressions', () => {
+  const result = pairs('def f(a={k1: {inner: 1}, k2: (lambda x, y: obj.attr)}, b: str): pass')
+  for (const name of ['k1', 'inner', 'k2', 'attr']) expect(result).toContainEqual(['property', name])
+  for (const name of ['a', 'b', 'x', 'y']) expect(result).toContainEqual(['variable', name])
+})
+
+test('Python bracket context preserves explicit property rules before identifier classification', () => {
+  const language = { ...python, rules: [{ type: 'property', pattern: /SPECIAL/ }, ...python.rules] }
+  const tokens = tokenize('def f(a, SPECIAL: str, b: str): pass', language)
+  expect(tokens).toContainEqual({ type: 'property', value: 'SPECIAL', start: 9, end: 16 })
+  expect(tokens).toContainEqual({ type: 'variable', value: 'b', start: 23, end: 24 })
+})
+
 test('Python f-strings expose expression variables, members, calls, and operators', () => {
   const result = pairs('label = f"Arrival {station.name}: {count + 1} {format(delay)} 🚉"')
   for (const pair of [['variable', 'station'], ['property', 'name'], ['variable', 'count'],

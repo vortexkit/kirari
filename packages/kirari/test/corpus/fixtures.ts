@@ -269,6 +269,16 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'python-typed-parameters-and-dictionary-keys', language: 'python',
+    source: 'def typed(\n    first: tuple[int, str],\n    second: str,\n    defaults={key1: {inner: 1}, key2: 2},\n):\n    return defaults.member\n',
+    assertions: [
+      { text: 'typed', type: 'function' }, { text: 'first', type: 'variable' },
+      { text: 'second', type: 'variable' }, { text: 'defaults', type: 'variable', occurrence: 0 },
+      { text: 'key1', type: 'property' }, { text: 'inner', type: 'property' },
+      { text: 'key2', type: 'property' }, { text: 'member', type: 'property' },
+    ],
+  },
+  {
     id: 'python-function-and-values', language: 'python',
     source: 'def select_route(routes):\n    for route in routes:\n        if route.enabled:\n            return True\n    return None # no match\n',
     assertions: [

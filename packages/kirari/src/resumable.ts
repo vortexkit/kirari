@@ -5,6 +5,8 @@ import type { Language, Token } from './types.js'
 export type ResumePoint = {
   readonly offset: number
   readonly previous: Token | undefined
+  /** Python delimiters open at the checkpoint, distinguishing dictionary keys from annotations. */
+  readonly brackets?: readonly string[]
   /** Script scan state at the point, for grammars that embed JavaScript. */
   readonly context?: ScanContext
 }
