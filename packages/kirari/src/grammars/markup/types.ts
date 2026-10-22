@@ -49,7 +49,7 @@ export type MarkupState = {
 }
 
 /** Where a JSX scan starts, and where to report root-level newlines it can resume from. */
-export interface MarkupResume {
+export type MarkupResume = {
   /** Restart point in the full source; omission starts scanning at offset zero. */
   readonly from?: ResumePoint | undefined
   /** Reports safe restart points with indexes in this scan's returned token array. */

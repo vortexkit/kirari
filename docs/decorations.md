@@ -19,7 +19,7 @@ The range decorates `answer`. Supply your own CSS for `search-match`, `active-li
 ## API
 
 ```ts
-interface Decoration {
+type Decoration = {
   readonly start: number
   readonly end: number
   readonly className: string

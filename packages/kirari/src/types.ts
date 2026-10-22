@@ -12,7 +12,7 @@ export type TokenType = (typeof tokenTypes)[number]
 export const isSignificant = (type: string): boolean => type !== 'text' && type !== 'comment'
 
 /** An unchanged source slice with UTF-16 offsets into the original source. */
-export interface Token {
+export type Token = {
   /** Category used for the `kirari-${type}` CSS class; custom names are supported. */
   readonly type: string
   /** Exact source text between `start` and `end`. */
@@ -24,7 +24,7 @@ export interface Token {
 }
 
 /** A lexical rule tried at the current source offset; the first matching rule wins. */
-export interface Rule {
+export type Rule = {
   /** Category assigned to the matched source text. */
   readonly type: string
   /** Cloned with `g`/`y` replaced by sticky `y`; supplied `lastIndex` is untouched. Empty matches throw. */
@@ -32,7 +32,7 @@ export interface Rule {
 }
 
 /** Scanner rules and optional structural processing for a language. */
-export interface Language {
+export type Language = {
   /** Language identifier used by diagnostics and grammar-specific scanning. */
   readonly name: string
   /** Ordered lexical rules used by the default scanner. */
@@ -58,7 +58,7 @@ export interface Language {
 }
 
 /** Extra CSS classes added alongside the renderer's standard token classes. */
-export interface RenderOptions {
+export type RenderOptions = {
   /** Additional classes by token category, including custom categories. */
   readonly classes?: Readonly<Record<string, string>>
   /** Additional classes per token, combined with `classes`; `undefined` adds nothing. */

@@ -1,6 +1,6 @@
 export type CorpusLanguage = 'javascript' | 'typescript' | 'tsx' | 'python' | 'json' | 'shell'
 
-export interface CorpusAssertion {
+export type CorpusAssertion = {
   text: string
   type: string
   occurrence?: number
@@ -10,7 +10,7 @@ export interface CorpusGap extends CorpusAssertion {
   reason: string
 }
 
-export interface CorpusFixture {
+export type CorpusFixture = {
   id: string
   language: CorpusLanguage
   source: string

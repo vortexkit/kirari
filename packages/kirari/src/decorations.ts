@@ -1,7 +1,7 @@
 import { escape, render, tokenClasses } from './render.js'
 import type { RenderOptions, Token } from './types.js'
 
-export interface Decoration {
+export type Decoration = {
   readonly start: number
   readonly end: number
   readonly className: string

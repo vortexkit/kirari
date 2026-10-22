@@ -5,7 +5,7 @@ import type { Language, Token } from '@vortexlabs/kirari/core'
 import { createTokenStream } from '@vortexlabs/kirari/stream'
 import type { TokenPatch, TokenStream } from '@vortexlabs/kirari/stream'
 
-export interface StreamedTokens {
+export type StreamedTokens = {
   readonly tokens: readonly Token[]
   write(chunk: string): void
   end(chunk?: string): void

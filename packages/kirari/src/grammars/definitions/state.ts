@@ -9,7 +9,7 @@ const backReference = /^(def|\*|&|\.|:|\?\.|->|\?->|::|>+)$/
  * Significant-token state before a point in Python source, tracked so a stream can tell when
  * `classifyDefinitions` results before that point no longer depend on later tokens.
  */
-export interface DefinitionState {
+export type DefinitionState = {
   /** Open brackets, as in `matchBrackets`, with the value before each opening. */
   brackets: { close: string; before: string }[]
   /** Bracket depths of `name:` annotation scans that have not reached `=` or a stop token. */

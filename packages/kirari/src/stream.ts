@@ -9,14 +9,14 @@ import { createResumableStream } from './stream/resumable.js'
 import { isSignificant } from './types.js'
 import type { Language, Token } from './types.js'
 
-export interface TokenPatch {
+export type TokenPatch = {
   /** Replace previous tokens from this UTF-16 source offset onward. */
   readonly from: number
   readonly tokens: readonly Token[]
   readonly length: number
 }
 
-export interface TokenStream {
+export type TokenStream = {
   readonly mode: 'checkpoint' | 'full'
   write(chunk: string): TokenPatch
   end(chunk?: string): TokenPatch

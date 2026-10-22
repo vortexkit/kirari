@@ -5,10 +5,10 @@ import { lastLineBreak } from '../scanner/lexical.js'
 type Result = { function: boolean; pending: boolean }
 type Group = { end: number; complete: boolean }
 /** Source-wide lookahead data; share only between scanners of the same immutable source. */
-export interface FunctionLookupCache {
+export type FunctionLookupCache = {
   lastLine?: number
 }
-export interface LookupOptions {
+export type LookupOptions = {
   /** A colon after the name may introduce a property value or a typed binding. */
   readonly colon: boolean
   /** The name may take type parameters, as after `function` or in a method position. */
