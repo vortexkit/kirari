@@ -5,13 +5,13 @@ import type { ScanContext } from '../tokenize.js'
 import { isSignificant } from '../types.js'
 import type { Language, Token } from '../types.js'
 import { resumableScan } from '../resumable.js'
-import type { ResumableScan } from '../resumable.js'
+import type { PythonScope, ResumableScan } from '../resumable.js'
 
 const tripleString = { type: 'string', pattern: /[rRuUbBfF]{0,2}(?:"""(?:\\(?:[\s\S]|$)|(?!""")[^\\])*(?:"""|$)|'''(?:\\(?:[\s\S]|$)|(?!''')[^\\])*(?:'''|$))/ }
 const fstringOpening = { type: 'python-fstring', pattern: /(?:[fF][rR]?|[rR][fF])(?:"""|'''|"|')/ }
 
 type Literal = { kind: 'literal'; quote: string; raw: boolean; format: boolean }
-type PythonFrame = { kind: 'expression'; brackets: string[]; root?: true } | Literal
+type PythonFrame = { kind: 'expression'; brackets?: PythonScope | undefined; root?: true } | Literal
 
 // Scans literal text in an f-string, stopping at a replacement field or the closing quote.
 const literalChunk = (source: string, start: number, frame: Literal): { end: number; closed: boolean } => {
@@ -63,7 +63,7 @@ const scanLanguage = (language: Language): Language => {
 // Resume points are whitespace at unescaped line breaks, outside f-strings, with more source after them.
 const scanPython: ResumableScan = (source, language, from, checkpoint) => {
   const tokens: Token[] = []
-  const frames: PythonFrame[] = [{ kind: 'expression', brackets: [...from?.brackets ?? []], root: true }]
+  const frames: PythonFrame[] = [{ kind: 'expression', brackets: from?.brackets, root: true }]
   const context: ScanContext = { parentheses: [] }
   const scanner = scan(source, scanLanguage(language), from?.offset, from?.previous, undefined, [], context)
   let position = from?.offset ?? 0
@@ -89,7 +89,7 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
       if (closed) frames.pop()
       else if (source[position] === '{') {
         emit('punctuation', position + 1)
-        frames.push({ kind: 'expression', brackets: [] })
+        frames.push({ kind: 'expression' })
       } else if (frame.format && source[position] === '}') {
         emit('punctuation', position + 1)
         frames.pop()
@@ -99,7 +99,7 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
     }
 
     if (resume !== undefined && yielded) previous = { type: 'tag', value: 'element', start: yielded.start, end: resume }
-    context.objectKeys = frame.brackets.at(-1) === '{'
+    context.objectKeys = frame.brackets?.value === '{'
     const result = scanner.next(resume)
     resume = undefined
     if (result.done) break
@@ -111,7 +111,7 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
       const merged = last?.type === 'text'
       // A backslash in source text continues the line; one inside a comment does not.
       if (!merged || !last.value.endsWith('\\')) {
-        checkpoint({ offset: merged ? last.start : position, previous, brackets: [...frame.brackets] }, merged ? tokens.length - 1 : tokens.length)
+        checkpoint({ offset: merged ? last.start : position, previous, brackets: frame.brackets }, merged ? tokens.length - 1 : tokens.length)
       }
     }
     const opening = token.type === fstringOpening.type && /^(f|fr|rf)("""|'''|"|')$/i.exec(token.value)
@@ -120,7 +120,7 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
       frames.push({ kind: 'literal', quote: opening[2]!, raw: /r/i.test(opening[1]!), format: false })
       continue
     }
-    if (!frame.root && !frame.brackets.length) {
+    if (!frame.root && !frame.brackets) {
       if (token.value === '}') {
         emit('punctuation', token.end)
         frames.pop()
@@ -139,10 +139,9 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
         continue
       }
     }
-    if (token.type === 'punctuation') {
-      if (/^[([{]$/.test(token.value)) frame.brackets.push(token.value)
-      else if (/^[)\]}]$/.test(token.value)) frame.brackets.pop()
-    }
+    if (token.type === 'keyword' && token.value === 'lambda' || token.type === 'punctuation' && /^[([{]$/.test(token.value)) {
+      frame.brackets = { value: token.value, parent: frame.brackets }
+    } else if (token.type === 'punctuation' && (/^[)\]}]$/.test(token.value) || token.value === ':' && frame.brackets?.value === 'lambda')) frame.brackets = frame.brackets?.parent
     emit(token.type, token.end)
   }
   return tokens

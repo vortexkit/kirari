@@ -5,12 +5,24 @@ import { csharp } from '../src/languages/csharp.js'
 import { php } from '../src/languages/php.js'
 import { css } from '../src/languages/css.js'
 import { javascript } from '../src/languages/javascript.js'
+import { python } from '../src/languages/python.js'
+import { resumableScanOf } from '../src/resumable.js'
 import { jsx } from '../src/languages/jsx.js'
 import { makefile } from '../src/languages/makefile.js'
 import { toml } from '../src/languages/toml.js'
 import { yaml } from '../src/languages/yaml.js'
 import { createMarkdown } from '../src/markdown.js'
 import { createRegistry } from '../src/registry.js'
+
+test('Python checkpoints avoid copying growing delimiter stacks on incomplete input', () => {
+  const source = '(\n'.repeat(75_000) + 'value'
+  let checkpoints = 0
+  const start = performance.now()
+  const tokens = resumableScanOf(python)!(source, python, undefined, () => checkpoints++)
+  expect(tokens.map(token => token.value).join('')).toBe(source)
+  expect(checkpoints).toBe(75_000)
+  expect(performance.now() - start).toBeLessThan(1500)
+}, 10_000)
 
 test('JSX expression lookups do not repeatedly search the full source for absent line separators', () => {
   const source = '<div>' + '{x}\n'.repeat(64_000) + '</div>'

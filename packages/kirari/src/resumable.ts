@@ -1,12 +1,14 @@
 import type { ScanContext } from './tokenize.js'
 import type { Language, Token } from './types.js'
 
+export type PythonScope = { readonly value: string; readonly parent: PythonScope | undefined }
+
 /** A root-level point where scanning can restart with the same results as a full scan. */
 export type ResumePoint = {
   readonly offset: number
   readonly previous: Token | undefined
-  /** Python delimiters open at the checkpoint, distinguishing dictionary keys from annotations. */
-  readonly brackets?: readonly string[]
+  /** Immutable Python delimiters and lambda parameter scopes shared with later checkpoints. */
+  readonly brackets?: PythonScope | undefined
   /** Script scan state at the point, for grammars that embed JavaScript. */
   readonly context?: ScanContext
 }

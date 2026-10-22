@@ -25,6 +25,21 @@ test('Python distinguishes dictionary keys, members, and lambda parameters in ne
   for (const name of ['a', 'b', 'x', 'y']) expect(result).toContainEqual(['variable', name])
 })
 
+test.each([
+  "x = {'f': lambda a, b: 1, next: 2}",
+  "x = {'f': lambda a={key: 1}, b: 1, next: 2}",
+  "x = {'f': lambda a=lambda c, d: 1, b: 2, next: 3}",
+  "x = {'f': lambda a,\n    b: 1,\n    next: 2}",
+  'f"{ {key: lambda a, b: 1, next: 2} }"',
+])('Python keeps unparenthesized lambda parameters out of dictionary keys in %j', source => {
+  const result = pairs(source)
+  expect(result).toContainEqual(['variable', 'b'])
+  expect(result).not.toContainEqual(['property', 'b'])
+  expect(result).toContainEqual(['property', 'next'])
+  if (source.includes('lambda c')) expect(result).toContainEqual(['variable', 'd'])
+  if (source.includes('key:')) expect(result).toContainEqual(['property', 'key'])
+})
+
 test('Python bracket context preserves explicit property rules before identifier classification', () => {
   const language = { ...python, rules: [{ type: 'property', pattern: /SPECIAL/ }, ...python.rules] }
   const tokens = tokenize('def f(a, SPECIAL: str, b: str): pass', language)

@@ -279,6 +279,16 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'python-dictionary-lambda-parameters', language: 'python',
+    source: 'handlers = {\n    first: lambda left,\n        right: 1,\n    second: lambda value={key: 2},\n        other: 3,\n}\n',
+    assertions: [
+      { text: 'first', type: 'property' }, { text: 'second', type: 'property' },
+      { text: 'left', type: 'variable' }, { text: 'right', type: 'variable' },
+      { text: 'value', type: 'variable' }, { text: 'other', type: 'variable' },
+      { text: 'key', type: 'property' },
+    ],
+  },
+  {
     id: 'python-function-and-values', language: 'python',
     source: 'def select_route(routes):\n    for route in routes:\n        if route.enabled:\n            return True\n    return None # no match\n',
     assertions: [
