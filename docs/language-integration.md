@@ -7,9 +7,7 @@ These optional entry points connect language labels to the definitions you impor
 ```ts
 import { tokenize, render } from '@vortexlabs/kirari/core'
 import { createRegistry } from '@vortexlabs/kirari/registry'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { typescript } from '@vortexlabs/kirari/languages/typescript'
-import { python } from '@vortexlabs/kirari/languages/python'
+import { javascript, typescript, python } from '@vortexlabs/kirari/languages'
 
 const registry = createRegistry([javascript, typescript, python])
 const source = 'const answer: number = 42'
@@ -51,9 +49,7 @@ Custom language names work without extra configuration, including as filename ex
 import { tokenize, render } from '@vortexlabs/kirari/core'
 import { createRegistry } from '@vortexlabs/kirari/registry'
 import { createMarkdown } from '@vortexlabs/kirari/markdown'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { python } from '@vortexlabs/kirari/languages/python'
-import { json } from '@vortexlabs/kirari/languages/json'
+import { javascript, python, json } from '@vortexlabs/kirari/languages'
 
 const markdown = createMarkdown(createRegistry([javascript, python, json]))
 const source = '# Example\n```js\nconst answer = 42\n```\n'

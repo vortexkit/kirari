@@ -24,6 +24,7 @@ Returns escaped HTML from readonly tokens. Custom classes append to Kirari’s s
 | `@vortexlabs/kirari/decorations` | [renderDecorated](/docs/decorations/), Decoration, DecoratedRenderOptions |
 | `@vortexlabs/kirari/registry` | [createRegistry](/docs/markdown/), LanguageRegistry |
 | `@vortexlabs/kirari/markdown` | [createMarkdown(registry)](/docs/markdown/) |
+| `@vortexlabs/kirari/languages` | Every language definition as a named export |
 | `@vortexlabs/kirari/languages/*` | One named language definition |
 | `@vortexlabs/kirari/theme.css` | Optional theme, driven by CSS variables |
 | `@vortexlabs/kirari-rehype` | [Optional Markdown and MDX plugin](/docs/rehype/), Options |

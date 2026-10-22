@@ -1,52 +1,54 @@
 import type * as Types from './languages.types'
-import { c } from '@vortexlabs/kirari/languages/c'
-import { csharp } from '@vortexlabs/kirari/languages/csharp'
-import { cpp } from '@vortexlabs/kirari/languages/cpp'
-import { clojure } from '@vortexlabs/kirari/languages/clojure'
-import { css } from '@vortexlabs/kirari/languages/css'
-import { dart } from '@vortexlabs/kirari/languages/dart'
-import { diff } from '@vortexlabs/kirari/languages/diff'
-import { dockerfile } from '@vortexlabs/kirari/languages/dockerfile'
-import { dotenv } from '@vortexlabs/kirari/languages/dotenv'
-import { elixir } from '@vortexlabs/kirari/languages/elixir'
-import { glsl } from '@vortexlabs/kirari/languages/glsl'
-import { go } from '@vortexlabs/kirari/languages/go'
-import { graphql } from '@vortexlabs/kirari/languages/graphql'
-import { groovy } from '@vortexlabs/kirari/languages/groovy'
-import { hcl } from '@vortexlabs/kirari/languages/hcl'
-import { html } from '@vortexlabs/kirari/languages/html'
-import { ini } from '@vortexlabs/kirari/languages/ini'
-import { java } from '@vortexlabs/kirari/languages/java'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { json } from '@vortexlabs/kirari/languages/json'
-import { jsonc } from '@vortexlabs/kirari/languages/jsonc'
-import { jsx } from '@vortexlabs/kirari/languages/jsx'
-import { julia } from '@vortexlabs/kirari/languages/julia'
-import { kotlin } from '@vortexlabs/kirari/languages/kotlin'
-import { lua } from '@vortexlabs/kirari/languages/lua'
-import { makefile } from '@vortexlabs/kirari/languages/makefile'
-import { markdown } from '@vortexlabs/kirari/languages/markdown'
-import { nginx } from '@vortexlabs/kirari/languages/nginx'
-import { php } from '@vortexlabs/kirari/languages/php'
-import { plaintext } from '@vortexlabs/kirari/languages/plaintext'
-import { powershell } from '@vortexlabs/kirari/languages/powershell'
-import { protobuf } from '@vortexlabs/kirari/languages/protobuf'
-import { python } from '@vortexlabs/kirari/languages/python'
-import { r } from '@vortexlabs/kirari/languages/r'
-import { ruby } from '@vortexlabs/kirari/languages/ruby'
-import { rust } from '@vortexlabs/kirari/languages/rust'
-import { scala } from '@vortexlabs/kirari/languages/scala'
-import { shell } from '@vortexlabs/kirari/languages/shell'
-import { sql } from '@vortexlabs/kirari/languages/sql'
-import { svelte } from '@vortexlabs/kirari/languages/svelte'
-import { swift } from '@vortexlabs/kirari/languages/swift'
-import { toml } from '@vortexlabs/kirari/languages/toml'
-import { tsx } from '@vortexlabs/kirari/languages/tsx'
-import { typescript } from '@vortexlabs/kirari/languages/typescript'
-import { vue } from '@vortexlabs/kirari/languages/vue'
-import { xml } from '@vortexlabs/kirari/languages/xml'
-import { yaml } from '@vortexlabs/kirari/languages/yaml'
-import { zig } from '@vortexlabs/kirari/languages/zig'
+import {
+	c,
+	csharp,
+	cpp,
+	clojure,
+	css,
+	dart,
+	diff,
+	dockerfile,
+	dotenv,
+	elixir,
+	glsl,
+	go,
+	graphql,
+	groovy,
+	hcl,
+	html,
+	ini,
+	java,
+	javascript,
+	json,
+	jsonc,
+	jsx,
+	julia,
+	kotlin,
+	lua,
+	makefile,
+	markdown,
+	nginx,
+	php,
+	plaintext,
+	powershell,
+	protobuf,
+	python,
+	r,
+	ruby,
+	rust,
+	scala,
+	shell,
+	sql,
+	svelte,
+	swift,
+	toml,
+	tsx,
+	typescript,
+	vue,
+	xml,
+	yaml,
+	zig,
+} from '@vortexlabs/kirari/languages'
 
 export const languageEntries: readonly Types.LanguageEntry[] = [
 	{

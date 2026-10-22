@@ -19,7 +19,7 @@ Requires React 19. Kirari is a peer dependency.
 
 ```tsx
 import { Code } from '@vortexlabs/kirari-react'
-import { typescript } from '@vortexlabs/kirari/languages/typescript'
+import { typescript } from '@vortexlabs/kirari/languages'
 import '@vortexlabs/kirari/theme.css'
 
 export const CodeExample = () => (
@@ -63,7 +63,7 @@ Line numbers are CSS:
 
 import { Code } from '@vortexlabs/kirari-react'
 import { useTokenStream } from '@vortexlabs/kirari-react/stream'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import '@vortexlabs/kirari/theme.css'
 
 export const StreamExample = () => {

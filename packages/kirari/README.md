@@ -52,7 +52,7 @@ JSX and TSX have separate definitions, including markup and embedded expressions
 
 ```ts
 import { highlight } from '@vortexlabs/kirari'
-import { tsx } from '@vortexlabs/kirari/languages/tsx'
+import { tsx } from '@vortexlabs/kirari/languages'
 
 const html = highlight('<Button disabled={busy}>{label}</Button>', { language: tsx })
 ```
@@ -61,7 +61,7 @@ For a Python-only bundle, import the language-independent core:
 
 ```ts
 import { tokenize, render } from '@vortexlabs/kirari/core'
-import { python } from '@vortexlabs/kirari/languages/python'
+import { python } from '@vortexlabs/kirari/languages'
 
 const html = render(tokenize('answer = 42', python))
 ```
@@ -162,7 +162,7 @@ These features use separate entrypoints and are absent from the default bundle:
 
 ```ts
 import { tokenize } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import { renderDecorated } from '@vortexlabs/kirari/decorations'
 import { createRegistry } from '@vortexlabs/kirari/registry'
 import { createMarkdown } from '@vortexlabs/kirari/markdown'
@@ -203,7 +203,7 @@ highlights Markdown source; the Rehype plugin integrates with document rendering
 
 ```ts
 import { highlight } from '@vortexlabs/kirari'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import type { Language } from '@vortexlabs/kirari'
 
 const projectJavaScript: Language = {

@@ -8,8 +8,7 @@ Build a registry from the languages you import, then pass it to `createMarkdown`
 import { tokenize, render } from '@vortexlabs/kirari/core'
 import { createRegistry } from '@vortexlabs/kirari/registry'
 import { createMarkdown } from '@vortexlabs/kirari/markdown'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { json } from '@vortexlabs/kirari/languages/json'
+import { javascript, json } from '@vortexlabs/kirari/languages'
 
 const registry = createRegistry([javascript, json])
 registry.resolve(' JS ')       // javascript

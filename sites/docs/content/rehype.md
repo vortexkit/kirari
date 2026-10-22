@@ -16,7 +16,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
 import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 
 const processor = unified()
   .use(remarkParse)
@@ -35,7 +35,7 @@ Pass the languages you need; labels like `js` resolve via the registry. Nothing 
 ```js
 import { compile } from '@mdx-js/mdx'
 import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 
 const markdown = '```js\nconst answer = 42\n```'
 const compiled = await compile(markdown, {

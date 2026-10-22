@@ -10,7 +10,7 @@ npm install @vortexlabs/kirari @vortexlabs/kirari-react
 
 ```tsx
 import { Code } from '@vortexlabs/kirari-react'
-import { typescript } from '@vortexlabs/kirari/languages/typescript'
+import { typescript } from '@vortexlabs/kirari/languages'
 import '@vortexlabs/kirari/theme.css'
 
 const source = 'const answer: number = 42'
@@ -36,7 +36,7 @@ Text children join the way React renders text, so `{value}` interpolation works;
 'use client'
 import { Code } from '@vortexlabs/kirari-react'
 import { useTokenStream } from '@vortexlabs/kirari-react/stream'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 
 export const StreamedCode = () => {
   const { tokens, write, end } = useTokenStream(javascript)

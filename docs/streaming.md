@@ -6,7 +6,7 @@ classifications, so patches replace a suffix instead of blindly appending tokens
 
 ```ts
 import { render, type Token } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import { createTokenStream, type TokenPatch } from '@vortexlabs/kirari/stream'
 
 const stream = createTokenStream(javascript)
