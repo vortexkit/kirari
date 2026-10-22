@@ -4,6 +4,8 @@ import { indexablePaths } from '@/lib/seo'
 import { sections } from '@/lib/navigation'
 import { readMarkdown } from '@/lib/content'
 import { site } from '@/lib/site'
+import { changelogMarkdownPath, readChangelogMarkdown } from '@/features/changelog/changelog.content'
+import { packages } from '@/features/changelog/changelog.data'
 
 const output = '.next/server/app'
 const titles = new Set<string>()
@@ -65,5 +67,13 @@ assert.ok(robots.includes(`Sitemap: ${site.url}/sitemap.xml`))
 assert.ok(robots.includes('Allow: /'))
 const llms = await readFile(`${output}/llms-full.txt.body`, 'utf8')
 for (const section of sections) assert.ok(llms.includes(await readMarkdown(section.id)))
+const index = await readFile(`${output}/llms.txt.body`, 'utf8')
+for (const item of packages) {
+  const markdown = await readChangelogMarkdown(item.id)
+  const text = await readFile(`${output}/markdown/changelog/${item.id}.body`, 'utf8')
+  assert.equal(text, markdown, `${item.id}: published changelog Markdown matches source`)
+  assert.ok(llms.includes(markdown), `${item.id}: changelog in the complete documentation`)
+  assert.ok(index.includes(`${site.url}${changelogMarkdownPath(item.id)}`), `${item.id}: changelog listed in llms.txt`)
+}
 
-console.log(`Verified ${indexablePaths.length} prerendered pages, ${sections.length} Markdown endpoints, sitemap, robots, and LLM documentation.`)
+console.log(`Verified ${indexablePaths.length} prerendered pages, ${sections.length + packages.length} Markdown endpoints, sitemap, robots, and LLM documentation.`)

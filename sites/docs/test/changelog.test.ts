@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { packages } from '@/features/changelog/changelog.data'
-import { parseRelease, readPackageReleases, readReleases, releaseTemplate } from '@/features/changelog/changelog.content'
+import { parseRelease, readChangelogMarkdown, readPackageReleases, readReleases, releaseTemplate } from '@/features/changelog/changelog.content'
 import { Changelog } from '@/features/changelog/Changelog'
 import { ClipboardProvider } from '@/components/ui/ClipboardProvider'
 
@@ -157,4 +157,25 @@ test('a package filter shows only that package and marks its link current', () =
   expect(html).not.toContain('id="kirari-1.0.4"')
   expect(html).toMatch(/aria-current="page" href="\/changelog\/?\?package=kirari-rehype"[^>]*>kirari-rehype<span[^>]*>3<\/span>/)
   expect(renderChangelog({ releases })).toMatch(/aria-current="page" href="\/changelog\/?"/)
+})
+
+test('the Markdown changelog lists published releases newest first without frontmatter', async () => {
+  const markdown = await readChangelogMarkdown('kirari-react')
+  const versions = [...markdown.matchAll(/^## (\d+\.\d+\.\d+) \(\d{4}-\d{2}-\d{2}\)$/gm)].map(match => match[1])
+  expect(versions).toEqual(releases.filter(entry => entry.package === 'kirari-react').map(entry => entry.version))
+  expect(markdown).toStartWith('# @vortexlabs/kirari-react changelog')
+  expect(markdown).toContain('**How to migrate**')
+  expect(markdown).not.toMatch(/^package: /m)
+})
+
+test('the Markdown changelog leaves out versions newer than package.json', async () => {
+  const root = join(scratch, 'markdown')
+  for (const item of packages) await mkdir(join(root, 'changelog', item.id), { recursive: true })
+  await mkdir(join(root, 'packages', 'kirari'), { recursive: true })
+  await writeFile(join(root, 'packages', 'kirari', 'package.json'), '{"version":"1.1.0"}')
+  await writeFile(join(root, 'changelog', 'kirari', '1.1.0.md'), frontmatter() + body())
+  await writeFile(join(root, 'changelog', 'kirari', '1.2.0.md'), frontmatter('package: kirari\nversion: 1.2.0\ndate: 2026-10-22') + body())
+  const markdown = await readChangelogMarkdown('kirari', join(root, 'changelog'), join(root, 'packages'))
+  expect(markdown).toContain('## 1.1.0 (2026-10-21)')
+  expect(markdown).not.toContain('1.2.0')
 })

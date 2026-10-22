@@ -8,6 +8,7 @@ const config: NextConfig = {
     { source: '/docs/installation.md', destination: '/markdown/overview' },
     { source: '/docs/:slug.md', destination: '/markdown/:slug' },
     { source: '/docs.md', destination: '/markdown/overview' },
+    { source: '/changelog/:package.md', destination: '/markdown/changelog/:package' },
   ],
   turbopack: { root: resolve(import.meta.dirname, '../..') },
   outputFileTracingRoot: resolve(import.meta.dirname, '../..'),

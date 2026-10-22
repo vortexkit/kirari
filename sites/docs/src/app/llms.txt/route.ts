@@ -1,3 +1,5 @@
+import { changelogMarkdownPath } from '@/features/changelog/changelog.content'
+import { packages } from '@/features/changelog/changelog.data'
 import { sectionGroups, sections } from '@/lib/navigation'
 import { site } from '@/lib/site'
 
@@ -22,6 +24,15 @@ export const GET = () =>
 						)
 						.join('\n')}\n`,
 			),
+			'## Changelogs',
+			'',
+			'Every published release, newest first. Breaking changes end with numbered migration steps.',
+			'',
+			...packages.map(
+				item =>
+					`- [${item.name}](${site.url}${changelogMarkdownPath(item.id)}): Releases of ${item.name}.`,
+			),
+			'',
 			'## Resources',
 			'',
 			`- [Complete documentation](${site.url}/llms-full.txt): All guides in one Markdown document.`,

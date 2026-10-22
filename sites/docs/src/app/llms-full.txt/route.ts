@@ -1,3 +1,5 @@
+import { readChangelogMarkdown } from '@/features/changelog/changelog.content'
+import { packages } from '@/features/changelog/changelog.data'
 import { readMarkdown } from '@/lib/content'
 import { docsPath, sections } from '@/lib/navigation'
 import { site } from '@/lib/site'
@@ -11,8 +13,12 @@ export const GET = async () => {
 				`Source: ${site.url}${docsPath(section.id)}\n\n${await readMarkdown(section.id)}`,
 		),
 	)
+	const changelogs = await Promise.all(packages.map(item => readChangelogMarkdown(item.id)))
 	return new Response(
-		`# Kirari documentation (v${site.version})\n\n${guides.join('\n---\n\n')}`,
+		`# Kirari documentation (v${site.version})\n\n${[
+			...guides,
+			...changelogs,
+		].join('\n---\n\n')}`,
 		{
 			headers: {
 				'Content-Type': 'text/plain; charset=utf-8',

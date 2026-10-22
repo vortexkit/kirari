@@ -23,6 +23,8 @@ type Heading = Extract<
 >
 
 export type ParsedRelease = z.infer<typeof frontmatterSchema> & {
+	/** Markdown after the frontmatter; node positions are offsets into it. */
+	body: string
 	sections: Record<Types.Category, Node[]>
 }
 
@@ -104,7 +106,8 @@ export const parseRelease = (source: string, path: string): ParsedRelease => {
 		)
 
 	const offset = block[0].split('\n').length - 1
-	const nodes = markdownProcessor.parse(source.slice(block[0].length)).children
+	const releaseBody = source.slice(block[0].length)
+	const nodes = markdownProcessor.parse(releaseBody).children
 	const line = (node: Node | undefined) =>
 		node?.position ? node.position.start.line + offset : undefined
 	const sections: ParsedRelease['sections'] = {
@@ -193,6 +196,7 @@ export const parseRelease = (source: string, path: string): ParsedRelease => {
 	}
 	return {
 		...frontmatter.data,
+		body: releaseBody,
 		sections,
 	}
 }
@@ -287,6 +291,48 @@ export const readPackageReleases = async (
 	return releases
 }
 
+/** The release files of one package up to the version in its `package.json`, newest first. */
+const readPublishedReleases = async (
+	item: (typeof packages)[number],
+	root: string,
+	packagesRoot: string,
+) => {
+	const manifest = join(packagesRoot, item.directory, 'package.json')
+	const { version: published } = JSON.parse(await readFile(manifest, 'utf8')) as {
+		version: string
+	}
+	return (await readPackageReleases(item.id, root)).filter(
+		release => compareVersions(release.version, published) <= 0,
+	)
+}
+
+const packageOf = (id: Types.PackageId) => packages.find(item => item.id === id)!
+
+/** Where a package's changelog is served as Markdown, such as `/changelog/kirari.md`. */
+export const changelogMarkdownPath = (id: Types.PackageId) => `/changelog/${id}.md`
+
+/**
+ * One package's published releases as Markdown for coding assistants, newest first, each release
+ * file's body under a `## <version>` heading.
+ */
+export const readChangelogMarkdown = async (
+	id: Types.PackageId,
+	root = join(process.cwd(), 'changelog'),
+	packagesRoot = join(process.cwd(), '..', '..', 'packages'),
+) => {
+	const item = packageOf(id)
+	const releases = await readPublishedReleases(item, root, packagesRoot)
+	return [
+		`# ${item.name} changelog`,
+		'',
+		`Every published release of ${item.name}, newest first. Each breaking change ends with numbered migration steps.`,
+		'',
+		...releases.map(
+			release => `## ${release.version} (${release.date})\n\n${release.body.trim()}\n`,
+		),
+	].join('\n')
+}
+
 /**
  * Every package's published releases, rendered on the server, newest first with the core package
  * first on the same day. Entries for versions newer than the package's `package.json` stay hidden
@@ -304,31 +350,25 @@ export const readReleases = async (
 		)
 	}
 	const releases = await Promise.all(
-		packages.map(async item => {
-			const manifest = join(packagesRoot, item.directory, 'package.json')
-			const { version: published } = JSON.parse(await readFile(manifest, 'utf8')) as {
-				version: string
-			}
-			return (await readPackageReleases(item.id, root))
-				.filter(release => compareVersions(release.version, published) <= 0)
-				.map(release => {
-					const id = `${item.id}-${release.version}`
-					return {
-						package: item.id,
-						version: release.version,
-						date: release.date,
-						sections: categories
-							.filter(category => release.sections[category.id].length)
-							.map(category => ({
-								category: category.id,
-								content: renderSection(
-									release.sections[category.id],
-									`${id}-${category.id}`,
-								),
-							})),
-					}
-				})
-		}),
+		packages.map(async item =>
+			(await readPublishedReleases(item, root, packagesRoot)).map(release => {
+				const id = `${item.id}-${release.version}`
+				return {
+					package: item.id,
+					version: release.version,
+					date: release.date,
+					sections: categories
+						.filter(category => release.sections[category.id].length)
+						.map(category => ({
+							category: category.id,
+							content: renderSection(
+								release.sections[category.id],
+								`${id}-${category.id}`,
+							),
+						})),
+				}
+			}),
+		),
 	)
 	return releases.flat().sort((left, right) => right.date.localeCompare(left.date))
 }
