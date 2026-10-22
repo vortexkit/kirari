@@ -58,6 +58,8 @@ const scriptFragments = [
 ]
 
 const scriptSources = [
+  'class Box {\n v: T;\n w: string;\n target: Handler = () => null;\n}\n',
+  'interface I { v: T; /* member */\n w: Box; }\n',
   'name\n\t(\nname\n)',
   '{name\n\t: true, "key"\r\n: null}',
   'return /[a\\/]*/g\nname()',
@@ -100,6 +102,7 @@ const markupFragments = [
 ]
 
 const markupSources = [
+  'class Box {\n v: T;\n w: string;\n target: Handler = () => <Box />;\n}\n',
   'const a = <div>\n  {items.map(item =>\n    <Item key={item} />)}\n</div>\n<span>\nnext()\n',
   'return (\n  <>\n    <b>x</b>\n    <i>y</i>\n  </>\n)\nconst t = a < b\n',
   'const a = <b>x</b>\n<i>\ny\n</i>\nnext()\n',

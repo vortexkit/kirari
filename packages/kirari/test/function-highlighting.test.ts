@@ -51,9 +51,10 @@ const cases = [
   ['overload signature', 'function target(value: string): string;'],
   ['typed function expression', 'const target = function (): { value: number } { return { value: 1 } }'],
   ['typed class field', 'class C { target: Handler = () => null }'],
+  ['typed class field after semicolon', 'class C { value: T; target: Handler = () => null }'],
   ['optional interface method', 'interface C { target?<T>(value: T): T }'],
 ] as const
-const typedOnly = new Set(['generic declaration', 'typed arrow parameters', 'arrow return annotation', 'generic arrow', 'annotated binding', 'object generic method', 'class generic method', 'interface method', 'generic interface method', 'overload signature', 'typed function expression', 'typed class field', 'optional interface method'])
+const typedOnly = new Set(['generic declaration', 'typed arrow parameters', 'arrow return annotation', 'generic arrow', 'annotated binding', 'object generic method', 'class generic method', 'interface method', 'generic interface method', 'overload signature', 'typed function expression', 'typed class field', 'typed class field after semicolon', 'optional interface method'])
 const negatives = [
   ['ordinary value', 'const target = true', 'variable'],
   ['function alias', 'const target = existingFunction', 'variable'],
