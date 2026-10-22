@@ -14,7 +14,7 @@ const pairs = (source: string, language = enhanced) => tokenize(source, language
 test('highlights multilingual fences using the first info word and keeps Markdown outside', () => {
   const source = '# Examples\n```js title="demo"\nconst answer = 42\n```\n~~~PY\ndef greet():\n  return True\n~~~\n```data.json\n{"ready": true}\n```\nText **bold** and `code`.\n'
   const result = pairs(source)
-  for (const pair of [['heading', '# Examples\n'], ['string', '```js title="demo"\n'], ['keyword', 'const'],
+  for (const pair of [['heading', '# Examples'], ['text', '\n'], ['string', '```js title="demo"\n'], ['keyword', 'const'],
     ['keyword', 'def'], ['boolean', 'True'], ['property', '"ready"'], ['boolean', 'true'], ['string', '`code`']]) {
     expect(result).toContainEqual(pair)
   }
@@ -35,7 +35,7 @@ test.each([
   '```js\nconst answer = 42\n``` trailing\n```\n# After\n',
 ])('reuses Markdown fence indentation, character, length, and trailing-text boundaries', source => {
   expect(pairs(source)).toContainEqual(['keyword', 'const'])
-  expect(pairs(source)).toContainEqual(['heading', source.includes('\r\n') ? '# After\r\n' : '# After\n'])
+  expect(pairs(source).slice(-2)).toEqual([['heading', '# After'], ['text', source.includes('\r\n') ? '\r\n' : '\n']])
   expect(tokenize(source, enhanced).map(token => token.value).join('')).toBe(source)
 })
 
@@ -78,7 +78,7 @@ test('renders escaped source and retains caller-provided outer Markdown rules', 
 test('does not recursively inject languages into Markdown fences', () => {
   const nested = createMarkdown(createRegistry([enhanced, javascript]))
   const source = '````md\n# Inside\n```js\nconst x = 1\n```\n````\n'
-  expect(pairs(source, nested)).toContainEqual(['heading', '# Inside\n'])
+  expect(pairs(source, nested)).toContainEqual(['heading', '# Inside'])
   expect(pairs(source, nested)).toContainEqual(['string', '```js\nconst x = 1\n```\n'])
   expect(pairs(source, nested)).not.toContainEqual(['keyword', 'const'])
 })

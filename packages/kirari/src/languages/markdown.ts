@@ -20,6 +20,12 @@ const markdownTokens = (source: string, language: Language): Token[] => {
   const emit = (type: string, start: number, end: number) => {
     if (end > start) tokens.push({ type, value: source.slice(start, end), start, end })
   }
+  // A heading ends at its line break; the break itself is text, as after any other line.
+  const emitHeading = (start: number, line: string) => {
+    const end = start + line.replace(/[\r\n]+$/, '').length
+    emit('heading', start, end)
+    emit('text', end, start + line.length)
+  }
   const emitInline = (value: string, start: number) => {
     for (const token of tokenize(value, base)) tokens.push({ ...token, start: token.start + start, end: token.end + start })
   }
@@ -38,11 +44,11 @@ const markdownTokens = (source: string, language: Language): Token[] => {
         fence = { char: open[1]![0]!, length: open[1]!.length, start: offset }
       } else if (/^ {0,3}#{1,6}(?:[ \t]|$)/.test(body)
         || (body.trim() && /^ {0,3}(?:=+|-+)[ \t]*(?:\r?\n|\r)?$/.test(lines[index + 1] ?? ''))) {
-        emit('heading', offset, offset + line.length)
+        emitHeading(offset, line)
         if (!/^ {0,3}#/.test(body)) {
           offset += line.length
           const underline = lines[++index]!
-          emit('heading', offset, offset + underline.length)
+          emitHeading(offset, underline)
           offset += underline.length
           continue
         }

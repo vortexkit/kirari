@@ -22,11 +22,13 @@ test('CSS selectors, custom properties, dimensions, colors, and functions', () =
 test('Markdown headings, links, inline code, and fence length', () => {
   const source = '# Heading\r\nText **bold** and [site](https://example.com), ``a ` b``.\n~~~~ js\n# code\n~~~\n~~~~\nAfter\n'
   const result = pairs(source, markdown)
-  expect(result).toContainEqual(['heading', '# Heading\r\n'])
+  expect(result).toContainEqual(['heading', '# Heading'])
   expect(result).toContainEqual(['string', '[site](https://example.com)'])
   expect(result).toContainEqual(['string', '``a ` b``'])
   expect(result).toContainEqual(['string', '~~~~ js\n# code\n~~~\n~~~~\n'])
-  expect(pairs('Title\n=====\n', markdown)).toEqual([['heading', 'Title\n'], ['heading', '=====\n']])
+  expect(pairs('Title\n=====\n', markdown)).toEqual([['heading', 'Title'], ['heading', '=====']])
+  expect(tokenize('# Title\nnext', markdown).map(token => [token.type, token.value])).toEqual([['heading', '# Title'], ['text', '\n'], ['text', 'next']])
+  expect(tokenize('Title\r\n---\r\n', markdown).map(token => [token.type, token.value])).toEqual([['heading', 'Title'], ['text', '\r\n'], ['heading', '---'], ['text', '\r\n']])
   expect(pairs('```js\nunfinished', markdown)).toEqual([['string', '```js\nunfinished']])
 })
 
