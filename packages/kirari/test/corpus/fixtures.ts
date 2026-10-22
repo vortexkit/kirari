@@ -89,6 +89,25 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'typescript-semicolon-members', language: 'typescript',
+    source: 'class Box { v: T; w: string }\ninterface I { first: T; /* member */ second: Box; third: number }',
+    assertions: [
+      { text: 'v', type: 'property' }, { text: 'w', type: 'property' },
+      { text: 'first', type: 'property' }, { text: 'second', type: 'property' },
+      { text: 'third', type: 'property' }, { text: '/* member */', type: 'comment' },
+      { text: 'string', type: 'type' }, { text: 'number', type: 'type' },
+    ],
+  },
+  {
+    id: 'tsx-semicolon-members', language: 'tsx',
+    source: 'interface Props { title: string; count: number }\nconst view = <Box />;',
+    assertions: [
+      { text: 'title', type: 'property' }, { text: 'count', type: 'property' },
+      { text: 'string', type: 'type' }, { text: 'number', type: 'type' },
+      { text: 'view', type: 'variable' }, { text: 'Box', type: 'tag' },
+    ],
+  },
+  {
     id: 'typescript-class-and-operators', language: 'typescript',
     source: 'class Meter {\n  private reading: number = 1_024;\n  sample(): unknown { return this.reading ?? undefined; }\n}',
     assertions: [

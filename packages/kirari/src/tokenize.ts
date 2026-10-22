@@ -236,7 +236,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       else if (types.has(name) || previous?.value === 'class' || typed && (context.annotation || previous?.type === 'keyword' && /^(type|interface|enum)$/.test(previous.value))) type = 'type'
       else {
         const following = nextVisibleChar(source, end)
-        if ((previous?.value === '{' || previous?.value === ',') && following === ':') type = 'property' // { name: value }
+        if (following === ':' && (previous?.value === '{' || previous?.value === ',' || typed && method && previous?.value === ';')) type = 'property' // { name: value } or TypeScript members
         else if (following === '(') type = 'function' // name(…)
       }
       // Look ahead for definitions such as `name = () => …` or `name: function () {}`.

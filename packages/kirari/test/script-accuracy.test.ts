@@ -58,6 +58,30 @@ for (const language of [javascript, typescript, jsx, tsx]) {
 }
 
 for (const language of [typescript, tsx]) {
+  test(`${language.name} recognizes member names after semicolons`, () => {
+    for (const source of [
+      'class Box { v: T; w: string; x: number }',
+      'interface I { v: T; w: Box; x: number }',
+      'type I = { v: T; w: Box; x: number }',
+      'class Box { v: T; /* next member */\n w: string;\n x: number }',
+    ]) {
+      expect(pairs(source, language).filter(token => ['v', 'w', 'x'].includes(token[1]!)))
+        .toEqual([['property', 'v'], ['property', 'w'], ['property', 'x']])
+    }
+  })
+
+  test(`${language.name} keeps statement labels after semicolons as variables`, () => {
+    for (const source of [
+      'run(); label: while (ready) break label;',
+      'function run() { step(); label: while (ready) break label; }',
+      'class Box { run() { step(); label: while (ready) break label; } }',
+      'class Box { static { step(); label: while (ready) break label; } }',
+    ]) {
+      expect(pairs(source, language).filter(token => token[1] === 'label'))
+        .toEqual([['variable', 'label'], ['variable', 'label']])
+    }
+  })
+
   test(`${language.name} distinguishes type aliases and annotations from runtime expressions`, () => {
     const source = 'type Parcel = { label: string }; const cargo: Parcel = item; function finish(): void {}'
     expect(pairs(source, language).filter(token => token[1] === 'Parcel')).toEqual([['type', 'Parcel'], ['type', 'Parcel']])
@@ -68,6 +92,7 @@ for (const language of [typescript, tsx]) {
     }
     expect(pairs('const select = (first: Parcel): Parcel => second', language)).toContainEqual(['variable', 'second'])
     expect(pairs('function deliver(item: Parcel) { return item }', language).filter(token => token[1] === 'item')).toEqual([['variable', 'item'], ['variable', 'item']])
+    expect(pairs('class Box { constructor(public item: Parcel) {} }', language)).toContainEqual(['type', 'Parcel'])
     for (const source of ['call({ "key": value })', 'call({ [key]: value })', 'const object = ({ 1: value })']) {
       expect(pairs(source, language)).toContainEqual(['variable', 'value'])
     }
@@ -100,6 +125,7 @@ test('script fixes preserve every unfinished UTF-16 prefix and streaming token p
     'const a\\u0031\\u0032b = 1;\na\\u0020a\\u0020;\ncall({\n"key": value,\n[key]: make()\n})',
     'type\nParcel\n=\n{ label: string };\nconst cargo\n:\nParcel\n= item;\nfunction finish()\n:\nvoid {}',
     'const result = active\n ? other\n : Parcel;\nconst n = void execute()',
+    'class Box { v: T;\n /* member */ w: string; x: number }\ninterface I { v: T; w: Box }',
     'const node = <Grid<Map<string, Item[]>>\n rows={items} />;\nnext()',
     '<Grid<Map<string, Item>>>= text</Grid>',
     '<Grid<A<B>= C>',
