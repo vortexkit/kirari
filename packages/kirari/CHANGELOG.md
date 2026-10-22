@@ -1,5 +1,13 @@
 # @vortexlabs/kirari
 
+## 1.1.3
+
+### Patch Changes
+
+- cfa00b7: Fix Markdown heading tokens including the trailing line break. The heading now ends at the end of its line and the line break is a separate text token, so line-based renderers and heading styles stop at the line end.
+- 43695a1: Fix JavaScript and TypeScript private class names such as `#count` being split into a `#` text token and a separate name. They are now one token, highlighted as a property, or as a function for private methods.
+- e0cd534: Public object types such as `Token`, `Rule`, `Language`, `RenderOptions`, `Decoration`, `TokenPatch`, `TokenStream`, and `StreamedTokens` are now type aliases instead of interfaces. Their members are unchanged, but they can no longer be extended through declaration merging (module augmentation). Types that extend another type, such as `HighlightOptions` and `CodeProps`, remain interfaces.
+
 ## 1.1.2
 
 ### Patch Changes
