@@ -126,10 +126,10 @@
 	--marker: var(--kirari-deleted);
 }
 .category[data-category="improvements"] {
-	--marker: var(--gold);
+	--marker: var(--kirari-inserted);
 }
 .category[data-category="fixes"] {
-	--marker: var(--kirari-string);
+	--marker: var(--gold);
 }
 .category h4 {
 	margin: 0;
