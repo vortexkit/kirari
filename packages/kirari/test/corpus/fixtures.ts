@@ -108,6 +108,14 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'javascript-private-members', language: 'javascript',
+    source: 'class Counter {\n  #count = 0;\n  #step() { return this.#count++ }\n  has(other) { return #count in other }\n}',
+    assertions: [
+      { text: '#count', type: 'property', occurrence: 0 }, { text: '#count', type: 'property', occurrence: 1 },
+      { text: '#count', type: 'property', occurrence: 2 }, { text: '#step', type: 'function' },
+    ],
+  },
+  {
     id: 'typescript-class-and-operators', language: 'typescript',
     source: 'class Meter {\n  private reading: number = 1_024;\n  sample(): unknown { return this.reading ?? undefined; }\n}',
     assertions: [

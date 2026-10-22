@@ -55,6 +55,16 @@ for (const language of [javascript, typescript, jsx, tsx]) {
     const validPrefix = 'parcel'.repeat(500)
     expect(pairs(`${validPrefix}\\u0020`, language)).toContainEqual(['variable', validPrefix])
   })
+
+  test(`${language.name} keeps private class names as one member token`, () => {
+    const names = (source: string) => pairs(source, language).filter(token => token[1]!.startsWith('#'))
+    expect(names('class C { #p = 1; m() { this.#p } }')).toEqual([['property', '#p'], ['property', '#p']])
+    expect(names('class C { static #s; get #a() {} #m() {} n() { this.#m(); return #s in C } }'))
+      .toEqual([['property', '#s'], ['function', '#a'], ['function', '#m'], ['property', '#m'], ['property', '#s']])
+    expect(names('class C { #handler = () => null }')).toEqual([['function', '#handler']])
+    expect(names('class C { #\\u0070 = 1; m() { this?.#\\u0070 } }')).toEqual([['property', '#\\u0070'], ['property', '#\\u0070']])
+    expect(pairs('class C { # = 1 }', language)).toContainEqual(['text', ' # '])
+  })
 }
 
 for (const language of [typescript, tsx]) {
@@ -126,6 +136,7 @@ test('script fixes preserve every unfinished UTF-16 prefix and streaming token p
     'type\nParcel\n=\n{ label: string };\nconst cargo\n:\nParcel\n= item;\nfunction finish()\n:\nvoid {}',
     'const result = active\n ? other\n : Parcel;\nconst n = void execute()',
     'class Box { v: T;\n /* member */ w: string; x: number }\ninterface I { v: T; w: Box }',
+    'class Counter {\n #count = 0;\n #step() {}\n add() { this.#step(); return #count in this }\n}',
     'const node = <Grid<Map<string, Item[]>>\n rows={items} />;\nnext()',
     '<Grid<Map<string, Item>>>= text</Grid>',
     '<Grid<A<B>= C>',
