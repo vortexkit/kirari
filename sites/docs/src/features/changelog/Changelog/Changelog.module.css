@@ -25,6 +25,18 @@
 	border-bottom: var(--hairline) solid var(--line);
 	background: var(--bg);
 }
+.filters::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	right: 0;
+	left: 0;
+	height: var(--size-48);
+	background: linear-gradient(to bottom, var(--bg), transparent);
+	backdrop-filter: blur(var(--size-4));
+	mask-image: linear-gradient(to bottom, #000, transparent);
+	pointer-events: none;
+}
 .filterList {
 	display: flex;
 	flex-wrap: wrap;
@@ -73,6 +85,10 @@
 	background: var(--ink);
 }
 .meta {
+	position: sticky;
+	top: calc(var(--top) + var(--size-32) + var(--size-24) + var(--hairline) + var(--size-16));
+	z-index: 10;
+	align-self: start;
 	display: flex;
 	flex-direction: column;
 	align-items: flex-start;
@@ -222,12 +238,11 @@
 	}
 	.filters {
 		--bleed: var(--size-16);
-		overflow-x: auto;
-		scrollbar-width: none;
 	}
 	.filterList {
 		flex-wrap: nowrap;
-		width: max-content;
+		overflow-x: auto;
+		scrollbar-width: none;
 	}
 	.timeline {
 		margin-top: var(--size-16);
@@ -238,6 +253,7 @@
 		padding-left: var(--size-20);
 	}
 	.meta {
+		position: static;
 		flex-flow: row wrap;
 		align-items: center;
 		gap: var(--size-6) var(--size-12);
