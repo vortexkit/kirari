@@ -60,6 +60,7 @@ const scriptFragments = [
 const scriptSources = [
   'class Box {\n v: T;\n w: string;\n target: Handler = () => null;\n}\n',
   'interface I { v: T; /* member */\n w: Box; }\n',
+  'class Counter {\n #count = 0;\n #step() {}\n add() { this.#step(); return #count in this }\n}\n',
   'name\n\t(\nname\n)',
   '{name\n\t: true, "key"\r\n: null}',
   'return /[a\\/]*/g\nname()',

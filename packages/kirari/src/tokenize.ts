@@ -155,13 +155,13 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
     position = end
   }
 
-  const match = (pattern: RegExp): string | undefined => {
-    pattern.lastIndex = position
+  const match = (pattern: RegExp, at = position): string | undefined => {
+    pattern.lastIndex = at
     const result = pattern.exec(source)
     // Unicode regexes can rewind into a surrogate pair in V8.
-    if (!result || result.index !== position) return undefined
+    if (!result || result.index !== at) return undefined
     if (result[0].length === 0) {
-      throw new Error(`Kirari: empty match in ${language.name} at offset ${position}`)
+      throw new Error(`Kirari: empty match in ${language.name} at offset ${at}`)
     }
     return result[0]
   }
@@ -216,12 +216,16 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       frames.push({ kind: 'template', opening: true })
       continue
     }
-    let name = identifier && match(identifier)
+    // `#name` is a private class member: one name token, and never a variable.
+    const privateName = script && char === '#'
+    const start = privateName ? position + 1 : position
+    let name = identifier && match(identifier, start)
     if (script && identifier) {
-      const end = escapedIdentifierEnd(source, position, position + (name?.length ?? 0))
-      if (end > position) name = source.slice(position, end)
+      const end = escapedIdentifierEnd(source, start, start + (name?.length ?? 0))
+      if (end > start) name = source.slice(start, end)
     }
     if (name !== undefined) {
+      if (privateName) name = `#${name}`
       // Classify the name; earlier branches win.
       let type = 'variable'
       const end = position + name.length
@@ -251,6 +255,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
         if (found.function) type = 'function'
         if (found.pending) context.functionPending = true
       }
+      if (privateName && type === 'variable') type = 'property'
       context.annotation = false
       emit(type, end)
       continue
