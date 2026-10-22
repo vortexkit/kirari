@@ -7,7 +7,7 @@ Apply token patches as source chunks arrive.
 ```ts
 import { render } from '@vortexlabs/kirari/core'
 import { createTokenStream } from '@vortexlabs/kirari/stream'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import type { Token } from '@vortexlabs/kirari/core'
 import type { TokenPatch } from '@vortexlabs/kirari/stream'
 

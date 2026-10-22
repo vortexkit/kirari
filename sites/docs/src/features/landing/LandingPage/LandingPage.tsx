@@ -1,6 +1,5 @@
 import { highlight } from '@vortexlabs/kirari'
-import { css } from '@vortexlabs/kirari/languages/css'
-import { typescript } from '@vortexlabs/kirari/languages/typescript'
+import { css, typescript } from '@vortexlabs/kirari/languages'
 import { languageEntries } from '@/lib/languages'
 import { docsPath, routes } from '@/lib/navigation'
 import { site } from '@/lib/site'

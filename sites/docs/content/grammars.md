@@ -5,7 +5,7 @@ Extend definitions with your own rules and categories.
 Copy a definition and put your rules first. Each rule matches at the current source position; earlier rules win.
 
 ```js
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { javascript } from '@vortexlabs/kirari/languages'
 import type { Language } from '@vortexlabs/kirari'
 
 const projectJavaScript: Language = {
