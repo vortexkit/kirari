@@ -1,5 +1,11 @@
 # @vortexlabs/kirari
 
+## 1.1.2
+
+### Patch Changes
+
+- f236510: Fix TypeScript and TSX member names after semicolons being highlighted as variables instead of properties.
+
 ## 1.1.1
 
 ### Patch Changes

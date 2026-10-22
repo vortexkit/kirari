@@ -19,7 +19,7 @@
     },
     "packages/kirari": {
       "name": "@vortexlabs/kirari",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "devDependencies": {
         "fast-check": "^4.10.2",
       },
