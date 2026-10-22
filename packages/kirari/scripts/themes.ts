@@ -4,7 +4,7 @@ import { tokenTypes, type TokenType } from '../src/types.js'
 
 type Colors = Partial<Record<TokenType, string>> & { background: string; text: string; keyword: string; function: string; string: string; number: string; comment: string }
 
-interface Theme {
+type Theme = {
   id: string
   label: string
   appearance: 'light' | 'dark'

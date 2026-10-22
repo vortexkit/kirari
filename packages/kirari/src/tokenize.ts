@@ -22,7 +22,7 @@ import { canStartRegex, escapedIdentifierEnd, nextVisibleChar, regexEnd, templat
 
 export type Frame = { kind: 'template'; opening: boolean } | { kind: 'expression'; depth: number }
 /** Lexical state for JavaScript-like languages, carried between scanner steps. */
-export interface ScanContext {
+export type ScanContext = {
   parentheses: { control: boolean; braces: number }[]
   braces?: number
   afterControl?: boolean

@@ -6,7 +6,7 @@ import type { Decoration } from '@vortexlabs/kirari/decorations'
 export type LineRange = number | readonly [first: number, last: number]
 
 /** A rendered source line; CRLF, CR, and LF separators sit outside its wrapper. */
-export interface Line {
+export type Line = {
   /** One-based line number. */
   readonly number: number
   /** Inclusive UTF-16 offset into the complete source. */

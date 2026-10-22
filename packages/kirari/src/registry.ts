@@ -36,7 +36,7 @@ const aliases: Readonly<Record<string, readonly string[]>> = {
   yaml: ['yml'],
 }
 
-export interface LanguageRegistry {
+export type LanguageRegistry = {
   resolve(input: string): Language | undefined
 }
 

@@ -9,7 +9,7 @@ import { corpus } from '../kirari/test/corpus/fixtures.js'
 import { bundleEntry, highlight, languageNames } from './adapters.js'
 import type { LanguageName } from './adapters.js'
 
-export interface Input {
+export type Input = {
   id: string
   language: LanguageName
   source: string
