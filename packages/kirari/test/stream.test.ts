@@ -110,6 +110,24 @@ test('Python streams keep definitions that later lines can still change revisabl
   }
 })
 
+test('Python line checkpoints bound rescanning inside multiline brackets', () => {
+  for (const source of [
+    'def f(\n' + '    arg: str,\n'.repeat(200) + '): pass\n',
+    'values = {\n' + '    key: (lambda a, b: b),\n'.repeat(200) + '}\n',
+  ]) {
+    const stream = createTokenStream(python)
+    const tokens: Token[] = []
+    let work = 0
+    for (let start = 0; start < source.length; start += 4) {
+      const patch = stream.write(source.slice(start, start + 4))
+      work += patch.length - patch.from
+      apply(tokens, patch)
+    }
+    expect(tokens).toEqual(tokenize(source, python))
+    expect(work).toBeLessThan(source.length * 20)
+  }
+})
+
 test('Python line checkpoints bound rescanning', () => {
   const blocks = [
     'def greet(name: str) -> str:\n    return f"Hello, {name}!"  # note\n',

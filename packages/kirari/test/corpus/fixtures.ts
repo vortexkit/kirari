@@ -269,6 +269,26 @@ export const corpus: readonly CorpusFixture[] = [
     ],
   },
   {
+    id: 'python-typed-parameters-and-dictionary-keys', language: 'python',
+    source: 'def typed(\n    first: tuple[int, str],\n    second: str,\n    defaults={key1: {inner: 1}, key2: 2},\n):\n    return defaults.member\n',
+    assertions: [
+      { text: 'typed', type: 'function' }, { text: 'first', type: 'variable' },
+      { text: 'second', type: 'variable' }, { text: 'defaults', type: 'variable', occurrence: 0 },
+      { text: 'key1', type: 'property' }, { text: 'inner', type: 'property' },
+      { text: 'key2', type: 'property' }, { text: 'member', type: 'property' },
+    ],
+  },
+  {
+    id: 'python-dictionary-lambda-parameters', language: 'python',
+    source: 'handlers = {\n    first: lambda left,\n        right: 1,\n    second: lambda value={key: 2},\n        other: 3,\n}\n',
+    assertions: [
+      { text: 'first', type: 'property' }, { text: 'second', type: 'property' },
+      { text: 'left', type: 'variable' }, { text: 'right', type: 'variable' },
+      { text: 'value', type: 'variable' }, { text: 'other', type: 'variable' },
+      { text: 'key', type: 'property' },
+    ],
+  },
+  {
     id: 'python-function-and-values', language: 'python',
     source: 'def select_route(routes):\n    for route in routes:\n        if route.enabled:\n            return True\n    return None # no match\n',
     assertions: [

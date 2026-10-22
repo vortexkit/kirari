@@ -21,9 +21,11 @@ import type { FunctionLookupCache } from './grammars/functions.js'
 import { canStartRegex, escapedIdentifierEnd, nextVisibleChar, regexEnd, templateChunk } from './scanner/lexical.js'
 
 export type Frame = { kind: 'template'; opening: boolean } | { kind: 'expression'; depth: number }
-/** Lexical state for JavaScript-like languages, carried between scanner steps. */
+/** Lexical state carried between scanner steps, including context supplied by embedded grammars. */
 export type ScanContext = {
   parentheses: { control: boolean; braces: number }[]
+  /** Unset keeps the generic comma-separated key heuristic. */
+  objectKeys?: boolean
   braces?: number
   afterControl?: boolean
   forAwait?: boolean
@@ -240,7 +242,7 @@ export function* scan(source: string, language: Language, start = 0, previous?: 
       else if (types.has(name) || previous?.value === 'class' || typed && (context.annotation || previous?.type === 'keyword' && /^(type|interface|enum)$/.test(previous.value))) type = 'type'
       else {
         const following = nextVisibleChar(source, end)
-        if (following === ':' && (previous?.value === '{' || previous?.value === ',' || typed && method && previous?.value === ';')) type = 'property' // { name: value } or TypeScript members
+        if (following === ':' && (previous?.value === '{' || previous?.value === ',' && context.objectKeys !== false || typed && method && previous?.value === ';')) type = 'property' // { name: value } or TypeScript members
         else if (following === '(') type = 'function' // name(…)
       }
       // Look ahead for definitions such as `name = () => …` or `name: function () {}`.
