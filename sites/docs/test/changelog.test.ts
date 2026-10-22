@@ -135,7 +135,7 @@ test('the site lists released versions newest first, with only categories that h
 
 test('breaking changes render their migration steps and highlighted commands', () => {
   const html = renderChangelog({ releases, active: 'kirari-react' })
-  const start = html.indexOf('data-category="breaking"')
+  const start = html.indexOf('data-category="breaking"', html.indexOf('id="kirari-react-1.0.0"'))
   const section = html.slice(start, html.indexOf('data-category="improvements"', start))
   expect(section).toContain('<h4>Requires <code>@vortexlabs/kirari</code> 1.x</h4>')
   expect(section).toContain('<p data-migrate="true"><strong>How to migrate</strong></p>')
