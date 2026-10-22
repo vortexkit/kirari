@@ -333,9 +333,9 @@ Measured on 2026-10-22 using Bun 1.3.4:
 
 | Entry | Minified bytes | Gzip bytes |
 | --- | ---: | ---: |
-| Core API | 8,505 | 3,728 |
-| JavaScript default | 9,678 | 4,247 |
-| All 48 languages | 68,465 | 22,960 |
+| Core API | 8,527 | 3,735 |
+| JavaScript default | 9,700 | 4,252 |
+| All 48 languages | 69,243 | 23,171 |
 
 ## Development
 

@@ -29,6 +29,8 @@ See the [README](README.md) for the full list of scripts.
 | `sites/docs` | Documentation site |
 | `packages/benchmarks` | Speed and bundle-size benchmarks (private) |
 
+[ARCHITECTURE.md](ARCHITECTURE.md) maps how the core package fits together.
+
 The core package has no runtime dependencies. Keep it that way: integration dependencies belong in `packages/rehype` or `packages/react`.
 
 ## Making changes

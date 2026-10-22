@@ -2,7 +2,7 @@ import type { TokenPatch, TokenStream } from '../stream.js'
 import type { Language, Token } from '../types.js'
 import { isSignificant } from '../types.js'
 import type { ResumableScan, ResumePoint } from '../resumable.js'
-import { classifyDefinitions, endsLine } from '../grammars/definitions.js'
+import { endsLine } from '../grammars/definitions.js'
 import { advanceDefinitionState, breakDefinitionLine, copyDefinitionState, createDefinitionState, isDefinitionBoundary } from '../grammars/definitions/state.js'
 import type { DefinitionState } from '../grammars/definitions/state.js'
 
@@ -56,7 +56,7 @@ export const createResumableStream = (language: Language, scanResumable: Resumab
     if (last) { resume = last.resume; resumeIndex = last.index }
 
     const from = final.offset
-    const tokens = classifyDefinitions(raw.slice(final.index), language.name, final.open)
+    const tokens = language.definitions!(raw.slice(final.index), final.open)
     // Tokens before the last resume point are final. A point is decided once the first significant
     // token after it is among them; its answer cannot change after that.
     let decided = 0

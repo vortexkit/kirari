@@ -18,7 +18,7 @@ Competitors measured on 2026-10-21; Kirari working tree measured on 2026-10-22:
 
 | Setup | Gzip bytes |
 | --- | ---: |
-| Kirari working tree, `highlight()` wrapper | 4,146 |
+| Kirari working tree, `highlight()` wrapper | 4,153 |
 | Shiki 4.5.0, synchronous core, JavaScript regex engine, JavaScript grammar, GitHub Dark | 73,530 |
 | Prism 1.30.0, core, clike dependency, JavaScript grammar | 5,278 |
 | highlight.js 11.12.0, core, JavaScript grammar | 11,056 |
@@ -26,8 +26,8 @@ Competitors measured on 2026-10-21; Kirari working tree measured on 2026-10-22:
 The script validates that each bundled function produces highlighted HTML and
 preserves an escaped source sample. It does not measure speed or grammar accuracy.
 
-Kirari's full JavaScript entry is 4,247 bytes gzip; its full set of 48 language
-definitions with core is 22,960 bytes. These come from `bun run size`. The wrapper
+Kirari's full JavaScript entry is 4,252 bytes gzip; its full set of 48 language
+definitions with core is 23,171 bytes. These come from `bun run size`. The wrapper
 above is smaller because unused exports can be removed. Kirari measurements use
 the current source, including unreleased changes; competitors use the named npm
 versions. Rerun both commands when the source or bundler changes.

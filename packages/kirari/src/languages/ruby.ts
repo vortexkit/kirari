@@ -1,12 +1,29 @@
 import { definitionsFor } from '../grammars/definitions.js'
+import type { FunctionSyntax } from '../grammars/definitions.js'
 import type { Language } from '../types.js'
 import { whitespace, number, operator, punctuation } from '../grammars/clike.js'
 
 const percentBody = /(?:\{(?:\\(?:[\s\S]|$)|[^}\\])*(?:\}|$)|\((?:\\(?:[\s\S]|$)|[^)\\])*(?:\)|$)|\[(?:\\(?:[\s\S]|$)|[^\]\\])*(?:\]|$)|<(?:\\(?:[\s\S]|$)|[^>\\])*(?:>|$)|([^\w\s{([<])(?:\\(?:[\s\S]|$)|(?!\1)[^\\])*(?:\1|$))/
 
+// Stabby lambdas: `->(x) { … }` and `-> do … end`.
+const stabby: FunctionSyntax['forms'] = (first, start, limit, { value, closing, block }) => {
+  if (first !== '->') return undefined
+  let body = start + 1
+  if (value(body) === '(') body = (closing(body) ?? limit) + 1
+  return value(body) === 'do' || value(body) === '{' && block(body)
+}
+
+const functions: FunctionSyntax = {
+  declaration: /^def$/,
+  literal: /^(lambda|proc)$/,
+  literalOpener: /^(\{|do|\()$/,
+  literalBody: true,
+  forms: stabby,
+}
+
 export const ruby: Language = {
   name: 'ruby',
-  definitions: definitionsFor('ruby'),
+  definitions: definitionsFor(functions),
   regexLiterals: true,
   identifier: /[_\p{ID_Start}]\p{ID_Continue}*[!?]?/u,
   keywords: 'BEGIN END alias and begin break case class def defined? do else elsif end ensure for if in module next not or redo rescue retry return self super then undef unless until when while yield __ENCODING__ __FILE__ __LINE__'.split(' '),

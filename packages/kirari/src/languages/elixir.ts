@@ -1,4 +1,5 @@
 import { definitionsFor } from '../grammars/definitions.js'
+import type { FunctionSyntax } from '../grammars/definitions.js'
 import type { Language } from '../types.js'
 import { whitespace } from '../grammars/clike.js'
 
@@ -7,9 +8,18 @@ const heredoc = /"""(?:\\(?:[\s\S]|$)|(?!""")[^\\])*(?:"""|$)|'''(?:\\(?:[\s\S]|
 const delimited = /\((?:\\(?:[\s\S]|$)|[^)\\])*(?:\)|$)|\[(?:\\(?:[\s\S]|$)|[^\]\\])*(?:\]|$)|\{(?:\\(?:[\s\S]|$)|[^}\\])*(?:\}|$)|<(?:\\(?:[\s\S]|$)|[^>\\])*(?:>|$)|([/|])(?:\\(?:[\s\S]|$)|(?!\1)[^\\])*(?:\1|$)/
 const sigil = new RegExp(`(?:${heredoc.source}|${quoted.source}|${delimited.source})[a-zA-Z0-9]*`)
 
+// Captures: `&(&1 + 1)` and `&Module.fun/1`.
+const capture: FunctionSyntax['forms'] = first => first === '&' ? true : undefined
+
+const functions: FunctionSyntax = {
+  declaration: /^(defp?|defmacro[p]?|defguard[p]?|defdelegate)$/,
+  literal: /^fn$/,
+  forms: capture,
+}
+
 export const elixir: Language = {
   name: 'elixir',
-  definitions: definitionsFor('elixir'),
+  definitions: definitionsFor(functions),
   identifier: /[_\p{ID_Start}]\p{ID_Continue}*[!?]?/u,
   keywords: 'after alias and case catch cond def defdelegate defexception defguard defguardp defimpl defmacro defmacrop defmodule defp defprotocol defstruct do else end fn for if import in not or quote raise receive require rescue reraise super throw try unless unquote unquote_splicing use when with'.split(' '),
   booleans: ['true', 'false'],

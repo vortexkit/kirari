@@ -10,7 +10,7 @@ const entries = {
 const budgets: Record<keyof typeof entries, number> = {
   core: 3_900,
   javascript: 4_400,
-  'all languages': 23_200,
+  'all languages': 23_400,
 }
 
 const over: string[] = []

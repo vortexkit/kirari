@@ -4,7 +4,7 @@ import { identifier, whitespace, lineComment, blockComment, number, operator, pu
 
 export const glsl: Language = {
   name: 'glsl',
-  definitions: definitionsFor('glsl'),
+  definitions: definitionsFor({}),
   identifier,
   keywords: 'attribute break buffer case centroid coherent const continue default discard do else flat for highp if in inout invariant layout lowp mediump noperspective out patch precision readonly restrict return sample shared smooth struct subroutine switch uniform varying volatile while writeonly'.split(' '),
   types: 'void bool int uint float double atomic_uint'.split(' '),

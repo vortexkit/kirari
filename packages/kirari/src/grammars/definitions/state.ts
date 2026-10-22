@@ -1,7 +1,6 @@
 import type { Token } from '../../types.js'
-import { pairs } from '../definitions.js'
+import { memberAccess, pairs } from '../definitions.js'
 
-const memberAccess = /^(\.|\?\.|->|\?->|::)$/
 const nameType = /^(variable|property|type|function|keyword|boolean|null)$/
 const backReference = /^(def|\*|&|\.|:|\?\.|->|\?->|::|>+)$/
 

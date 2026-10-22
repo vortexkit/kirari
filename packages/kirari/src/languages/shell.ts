@@ -161,7 +161,7 @@ const heredocEnd = (source: string, position: number, heredoc: Heredoc): { start
 
 export const shell: Language = {
   name: 'shell',
-  definitions: definitionsFor('shell'),
+  definitions: definitionsFor({ declaration: /^function$/ }),
   tokenize: tokenizeShell,
   identifier: /[a-zA-Z_][a-zA-Z_\d-]*/,
   keywords: 'case do done elif else esac fi for function if in select then time until while'.split(' '),

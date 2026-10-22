@@ -4,7 +4,7 @@ import { nestedComments, whitespace, lineComment, blockComment, quotedString, tr
 
 export const dart: Language = {
   name: 'dart',
-  definitions: definitionsFor('dart'),
+  definitions: definitionsFor({ arrow: '=>', typeParameters: true, parameterBodies: true, genericCalls: true }),
   tokenize: nestedComments,
   identifier: /[$_\p{ID_Start}][$\p{ID_Continue}]*/u,
   keywords: 'abstract as assert async await base break case catch class const continue covariant default deferred do dynamic else enum export extends extension external factory final finally for get hide if implements import in interface is late library mixin native new of on operator part required rethrow return sealed set show static super switch sync this throw try typedef var void when while with yield'.split(' '),
