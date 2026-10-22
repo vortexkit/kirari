@@ -20,7 +20,7 @@ const longBrackets = (source: string, language: Language): Token[] => {
 
 export const lua: Language = {
   name: 'lua',
-  definitions: definitionsFor('lua'),
+  definitions: definitionsFor({ declaration: /^function$/, literal: /^function$/ }),
   tokenize: longBrackets,
   identifier: /[a-zA-Z_]\w*/,
   keywords: 'and break do else elseif end for function goto if in local not or repeat return then until while'.split(' '),

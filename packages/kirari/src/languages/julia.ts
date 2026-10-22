@@ -19,7 +19,7 @@ const comments = (source: string, language: Language): Token[] => {
 
 export const julia: Language = {
   name: 'julia',
-  definitions: definitionsFor('julia'),
+  definitions: definitionsFor({ declaration: /^(function|macro)$/, literal: /^function$/, arrow: '->' }),
   tokenize: comments,
   identifier: /[_\p{ID_Start}][\p{ID_Continue}]*(?:!(?!=))?/u,
   keywords: 'abstract baremodule begin break catch const continue do else elseif end export finally for function global if import in isa let local macro module mutable outer primitive public quote return struct try type using where while'.split(' '),

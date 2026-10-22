@@ -4,7 +4,7 @@ import { identifier, whitespace, lineComment, blockComment, preprocessor, operat
 
 export const c: Language = {
   name: 'c',
-  definitions: definitionsFor('c'),
+  definitions: definitionsFor({}),
   identifier,
   keywords: 'alignas alignof auto break case const constexpr continue default do else enum extern for goto if inline register restrict return sizeof static static_assert struct switch thread_local typedef typeof typeof_unqual union volatile while _Alignas _Alignof _Atomic _Generic _Noreturn _Static_assert _Thread_local'.split(' '),
   types: 'bool char double float int long short signed unsigned void _Bool _Complex _Imaginary'.split(' '),

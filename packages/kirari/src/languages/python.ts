@@ -1,4 +1,5 @@
 import { definitionsFor } from '../grammars/definitions.js'
+import type { FunctionSyntax } from '../grammars/definitions.js'
 import { scan } from '../tokenize.js'
 import { isSignificant } from '../types.js'
 import type { Language, Token } from '../types.js'
@@ -146,9 +147,18 @@ const scanPython: ResumableScan = (source, language, from, checkpoint) => {
 
 const tokenizePython = (source: string, language: Language): Token[] => scanPython(source, language)
 
+const functions: FunctionSyntax = {
+  declaration: /^def$/,
+  literal: /^lambda$/,
+  comparisonAngles: true,
+  annotations: true,
+  lineAnnotations: true,
+  decorators: true,
+}
+
 export const python: Language = {
   name: 'python',
-  definitions: definitionsFor('python'),
+  definitions: definitionsFor(functions),
   tokenize: tokenizePython,
   identifier: /[_\p{ID_Start}]\p{ID_Continue}*/u,
   keywords: 'and as assert async await break case class continue def del elif else except finally for from global if import in is lambda match nonlocal not or pass raise return try while with yield'.split(' '),

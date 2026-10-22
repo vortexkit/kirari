@@ -21,7 +21,7 @@ const rawStrings = (source: string, language: Language): Token[] => {
 
 export const r: Language = {
   name: 'r',
-  definitions: definitionsFor('r'),
+  definitions: definitionsFor({ literal: /^(function|\\)$/, assignment: /^(=|<-|<<-)$/ }),
   tokenize: rawStrings,
   identifier: /(?:[\p{L}]|\.(?!\d))[\p{L}\d._]*/u,
   keywords: 'if else repeat while function for in next break'.split(' '),

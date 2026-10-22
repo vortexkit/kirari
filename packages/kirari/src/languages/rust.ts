@@ -1,10 +1,14 @@
 import { definitionsFor } from '../grammars/definitions.js'
+import type { FunctionSyntax } from '../grammars/definitions.js'
 import type { Language } from '../types.js'
 import { nestedComments, identifier, whitespace, lineComment, blockComment, number, operator, punctuation } from '../grammars/clike.js'
 
+// Closures: `|x| x + 1` and `|| …`.
+const closure: FunctionSyntax['forms'] = first => first === '|' || first === '||' ? true : undefined
+
 export const rust: Language = {
   name: 'rust',
-  definitions: definitionsFor('rust'),
+  definitions: definitionsFor({ declaration: /^fn$/, modifiers: /^(async|move)$/, forms: closure, genericCalls: true, annotations: true }),
   tokenize: nestedComments,
   identifier,
   keywords: 'as async await break const continue crate dyn else enum extern fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait type union unsafe use where while abstract become box do final macro override priv typeof unsized virtual yield try gen'.split(' '),

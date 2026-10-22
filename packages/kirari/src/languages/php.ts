@@ -6,7 +6,7 @@ const keywords = 'abstract and array as break callable case catch class clone co
 
 export const php: Language = {
   name: 'php',
-  definitions: definitionsFor('php'),
+  definitions: definitionsFor({ declaration: /^function$/i, literal: /^(function|fn)$/i, literalBody: true, modifiers: /^static$/i }),
   identifier: /[_\p{ID_Start}]\p{ID_Continue}*/u,
   keywords,
   types: 'bool float int iterable mixed never object string void'.split(' '),
