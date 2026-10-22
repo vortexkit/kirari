@@ -5,7 +5,7 @@ import { join } from 'node:path'
 import { createElement } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { packages } from '@/features/changelog/changelog.data'
-import { parseRelease, readChangelogMarkdown, readPackageReleases, readReleases, releaseTemplate } from '@/features/changelog/changelog.content'
+import { migrationPrompts, parseRelease, readChangelogMarkdown, readPackageReleases, readReleases, releaseTemplate } from '@/features/changelog/changelog.content'
 import { Changelog } from '@/features/changelog/Changelog'
 import { ClipboardProvider } from '@/components/ui/ClipboardProvider'
 
@@ -157,6 +157,27 @@ test('a package filter shows only that package and marks its link current', () =
   expect(html).not.toContain('id="kirari-1.0.4"')
   expect(html).toMatch(/aria-current="page" href="\/changelog\/?\?package=kirari-rehype"[^>]*>kirari-rehype<span[^>]*>3<\/span>/)
   expect(renderChangelog({ releases })).toMatch(/aria-current="page" href="\/changelog\/?"/)
+})
+
+test('each breaking change gets a prompt that quotes it and links the Markdown changelog', () => {
+  const second = '#### Removed `c`\n\nUse `d`.\n\n**How to migrate**\n\n1. Replace `c()` with `d()`.'
+  const prompts = migrationPrompts(parse(frontmatter() + body({ breaking: `${breaking}\n\n${second}`, fixes: '- Fixed.' })))
+  expect(prompts).toHaveLength(2)
+  expect(prompts[0]).toStartWith("I'm upgrading @vortexlabs/kirari to 1.1.0 or later.")
+  expect(prompts[0]).toEndWith(breaking)
+  expect(prompts[0]).toContain('https://kirari.sh/changelog/kirari.md')
+  expect(prompts[1]).toEndWith(second)
+})
+
+test('every breaking change renders a migration prompt callout', () => {
+  const html = renderChangelog({ releases })
+  const changes = [...html.matchAll(/data-category="breaking"[\s\S]*?<\/section>/g)].map(match => match[0])
+  expect(changes.length).toBeGreaterThan(0)
+  for (const section of changes) {
+    expect(section.match(/data-ai-prompt=""/g)).toHaveLength(section.match(/<h4>/g)!.length)
+    expect(section).toContain('Migrate with an AI assistant')
+    expect(section).toContain('>Copy prompt<')
+  }
 })
 
 test('the Markdown changelog lists published releases newest first without frontmatter', async () => {

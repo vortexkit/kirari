@@ -75,5 +75,7 @@ for (const item of packages) {
   assert.ok(llms.includes(markdown), `${item.id}: changelog in the complete documentation`)
   assert.ok(index.includes(`${site.url}${changelogMarkdownPath(item.id)}`), `${item.id}: changelog listed in llms.txt`)
 }
+const changelog = await readFile(`${output}/changelog.html`, 'utf8')
+assert.equal((changelog.match(/data-ai-prompt=""/g) ?? []).length, (changelog.match(/data-category="breaking"[\s\S]*?<\/section>/g) ?? []).join('').match(/<h4>/g)?.length ?? 0, 'one migration prompt per breaking change')
 
 console.log(`Verified ${indexablePaths.length} prerendered pages, ${sections.length + packages.length} Markdown endpoints, sitemap, robots, and LLM documentation.`)
