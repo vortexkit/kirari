@@ -76,7 +76,7 @@ types, tests, package and docs builds, and installing packed packages outside th
 workspace. The separate browser harness still needs to be opened in a browser;
 CI does not execute it.
 
-- **Issue first.** Every pull request closes an issue. Open one (or find the existing one)
+- **Issue first.** Every pull request into `main` closes an issue. Open one (or find the existing one)
   before you open the pull request, then put `Closes #<issue>` in its description. A pull
   request without one fails the [Linked issue](.github/workflows/linked-issue.yml)
   check and won't be reviewed.
