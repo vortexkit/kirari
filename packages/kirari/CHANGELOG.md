@@ -1,5 +1,11 @@
 # @vortexlabs/kirari
 
+## 1.1.4
+
+### Patch Changes
+
+- d8888a8: Keep Python annotated parameters after commas and unparenthesized lambda parameters inside dictionaries highlighted as variables rather than dictionary keys, including when streaming multiline signatures.
+
 ## 1.1.3
 
 ### Patch Changes
