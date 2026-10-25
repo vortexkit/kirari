@@ -6,21 +6,22 @@ on:
 
 permissions:
   issues: read
-  pull-requests: read
 
 jobs:
   linked-issue:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login != 'dependabot[bot]'
     steps:
       - env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_BODY: ${{ github.event.pull_request.body }}
           REPO: ${{ github.repository }}
         run: |
-          count=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json closingIssuesReferences --jq '.closingIssuesReferences | length')
-          if [ "$count" -eq 0 ]; then
-            echo "::error::This PR doesn't close an issue. Open an issue first, then add 'Closes #<issue>' to the PR description (CONTRIBUTING.md, Pull requests)."
-            exit 1
-          fi
-          echo "Closes $count issue(s)."
+          numbers=$(printf '%s\n' "$PR_BODY" | grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?):?[[:space:]]+#[0-9]+' | grep -oE '[0-9]+$' | sort -u || true)
+          for number in $numbers; do
+            if [ "$(gh api "repos/$REPO/issues/$number" --jq '.pull_request == null' 2>/dev/null)" = true ]; then
+              echo "Closes #$number."
+              exit 0
+            fi
+          done
+          echo "::error::This PR doesn't close an issue. Open an issue first, then add 'Closes #<issue>' to the PR description (CONTRIBUTING.md, Pull requests)."
+          exit 1

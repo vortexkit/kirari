@@ -78,7 +78,7 @@ CI does not execute it.
 
 - **Issue first.** Every pull request closes an issue. Open one (or find the existing one)
   before you open the pull request, then put `Closes #<issue>` in its description. A pull
-  request with no linked issue fails the [Linked issue](.github/workflows/linked-issue.yml)
+  request without one fails the [Linked issue](.github/workflows/linked-issue.yml)
   check and won't be reviewed.
 - Describe what changed and why.
 - Keep pull requests small. Split unrelated changes.
