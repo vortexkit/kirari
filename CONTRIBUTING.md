@@ -76,7 +76,11 @@ types, tests, package and docs builds, and installing packed packages outside th
 workspace. The separate browser harness still needs to be opened in a browser;
 CI does not execute it.
 
-- Describe what changed and why, and link the issue it addresses.
+- **Issue first.** Every pull request closes an issue. Open one (or find the existing one)
+  before you open the pull request, then put `Closes #<issue>` in its description. A pull
+  request with no linked issue fails the [Linked issue](.github/workflows/linked-issue.yml)
+  check and won't be reviewed.
+- Describe what changed and why.
 - Keep pull requests small. Split unrelated changes.
 - Make sure `bun run check` passes and a changeset is included when needed.
 

@@ -1,0 +1,26 @@
+name: Linked issue
+
+on:
+  pull_request_target:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  issues: read
+  pull-requests: read
+
+jobs:
+  linked-issue:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.user.login != 'dependabot[bot]'
+    steps:
+      - env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          count=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json closingIssuesReferences --jq '.closingIssuesReferences | length')
+          if [ "$count" -eq 0 ]; then
+            echo "::error::This PR doesn't close an issue. Open an issue first, then add 'Closes #<issue>' to the PR description (CONTRIBUTING.md, Pull requests)."
+            exit 1
+          fi
+          echo "Closes $count issue(s)."
