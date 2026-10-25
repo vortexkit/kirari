@@ -2,6 +2,7 @@ name: Linked issue
 
 on:
   pull_request_target:
+    branches: [main]
     types: [opened, edited, reopened, synchronize]
 
 permissions:
@@ -16,7 +17,7 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
           REPO: ${{ github.repository }}
         run: |
-          numbers=$(printf '%s\n' "$PR_BODY" | grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?):?[[:space:]]+#[0-9]+' | grep -oE '[0-9]+$' | sort -u || true)
+          numbers=$(printf '%s\n' "$PR_BODY" | grep -oiE '\b(close[sd]?|fix(e[sd])?|resolve[sd]?):?[[:space:]]+#[0-9]+\b' | grep -oE '[0-9]+$' | sort -u || true)
           for number in $numbers; do
             if [ "$(gh api "repos/$REPO/issues/$number" --jq '.pull_request == null' 2>/dev/null)" = true ]; then
               echo "Closes #$number."
