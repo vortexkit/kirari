@@ -1,6 +1,6 @@
 # Installation
 
-Kirari is published on npm as `kirari`. Projects that installed `@vortexlabs/kirari` keep working: that package re-exports `kirari`.
+Kirari is published on npm as `kirari`. `@vortexlabs/kirari` is unsupported: it re-exports `kirari` 1.x, so existing projects keep working, but it does not follow 2.0 or later. Replace it with `kirari` to keep receiving updates.
 
 ```sh
 npm install kirari
