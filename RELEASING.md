@@ -11,9 +11,9 @@ Do not release them again. `packages/compat`, `packages/compat-rehype`, and `pac
 The deprecation message is the notice users see on install and on the npm page. Updating it does not need a release:
 
 ```bash
-npm deprecate @vortexlabs/kirari "Unsupported. Renamed to kirari: run npm i kirari and replace @vortexlabs/kirari with kirari in imports. Follows kirari 1.x only."
-npm deprecate @vortexlabs/kirari-react "Unsupported. Renamed to kirari-react: run npm i kirari-react and replace @vortexlabs/kirari-react with kirari-react in imports. Follows kirari-react 1.x only."
-npm deprecate @vortexlabs/kirari-rehype "Unsupported. Renamed to kirari-rehype: run npm i kirari-rehype and replace @vortexlabs/kirari-rehype with kirari-rehype in imports. Follows kirari-rehype 1.x only."
+npm deprecate @vortexlabs/kirari "Unsupported. Renamed to kirari: run npm uninstall @vortexlabs/kirari && npm install kirari, then replace @vortexlabs/kirari with kirari in imports. Follows kirari 1.x only."
+npm deprecate @vortexlabs/kirari-react "Unsupported. Renamed to kirari-react: run npm uninstall @vortexlabs/kirari-react && npm install kirari-react, then replace @vortexlabs/kirari-react with kirari-react in imports. Follows kirari-react 1.x only."
+npm deprecate @vortexlabs/kirari-rehype "Unsupported. Renamed to kirari-rehype: run npm uninstall @vortexlabs/kirari-rehype && npm install kirari-rehype, then replace @vortexlabs/kirari-rehype with kirari-rehype in imports. Follows kirari-rehype 1.x only."
 ```
 
 Versioning is driven by [Changesets](https://github.com/changesets/changesets). Each package is versioned independently. Select only the packages affected by a change when creating its changeset. For example, a React-only patch increments `kirari-react` without changing core or Rehype.
