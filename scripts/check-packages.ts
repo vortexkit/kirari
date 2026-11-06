@@ -116,6 +116,10 @@ try {
   for (const name of ['@vortexlabs/kirari', '@vortexlabs/kirari-rehype', '@vortexlabs/kirari-react']) {
     const manifest = JSON.parse(await readFile(join(legacy, 'node_modules', name, 'package.json'), 'utf8'))
     assert.ok(!JSON.stringify(manifest).includes('workspace:'), `${name} has unresolved workspace references`)
+    for (const [dependency, range] of Object.entries(manifest.dependencies as Record<string, string>)) {
+      const target = JSON.parse(await readFile(join(legacy, 'node_modules', dependency, 'package.json'), 'utf8'))
+      assert.equal(range, `^${target.version}`, `${name} must depend on ${dependency} with a caret range so it follows compatible releases`)
+    }
     assert.ok(!await readdir(join(legacy, 'node_modules', name, 'node_modules')).catch(() => undefined), `${name} must share the top-level kirari packages`)
   }
   await writeFile(join(legacy, 'consumer.ts'), scoped(await readFile(join(root, 'checks/pack-consumer.ts'), 'utf8')))
