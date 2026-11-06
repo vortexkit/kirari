@@ -1,6 +1,6 @@
 {
   "name": "@vortexlabs/kirari-react",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Renamed to kirari-react. This package re-exports kirari-react so existing imports keep working.",
   "keywords": [
     "react",

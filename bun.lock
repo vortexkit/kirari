@@ -19,14 +19,14 @@
     },
     "packages/compat": {
       "name": "@vortexlabs/kirari",
-      "version": "1.1.4",
+      "version": "1.2.0",
       "dependencies": {
         "kirari": "workspace:^",
       },
     },
     "packages/compat-react": {
       "name": "@vortexlabs/kirari-react",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "dependencies": {
         "kirari": "workspace:^",
         "kirari-react": "workspace:^",
@@ -45,7 +45,7 @@
     },
     "packages/compat-rehype": {
       "name": "@vortexlabs/kirari-rehype",
-      "version": "1.0.2",
+      "version": "1.1.0",
       "dependencies": {
         "kirari": "workspace:^",
         "kirari-rehype": "workspace:^",
@@ -53,14 +53,14 @@
     },
     "packages/kirari": {
       "name": "kirari",
-      "version": "1.1.4",
+      "version": "1.2.0",
       "devDependencies": {
         "fast-check": "^4.10.2",
       },
     },
     "packages/react": {
       "name": "kirari-react",
-      "version": "1.1.1",
+      "version": "1.2.0",
       "devDependencies": {
         "@happy-dom/global-registrator": "^20.14.6",
         "@types/react": "^19.3.0",
@@ -71,7 +71,7 @@
       },
       "peerDependencies": {
         "@types/react": "^19",
-        "kirari": "^1.0.0",
+        "kirari": "^1.2.0",
         "react": "^19",
       },
       "optionalPeers": [
@@ -80,7 +80,7 @@
     },
     "packages/rehype": {
       "name": "kirari-rehype",
-      "version": "1.0.2",
+      "version": "1.1.0",
       "dependencies": {
         "@types/hast": "^3.0.5",
       },
@@ -98,7 +98,7 @@
         "unified": "^11.0.5",
       },
       "peerDependencies": {
-        "kirari": "^1.0.0",
+        "kirari": "^1.2.0",
       },
     },
     "sites/docs": {

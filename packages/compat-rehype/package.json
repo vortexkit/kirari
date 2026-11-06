@@ -1,6 +1,6 @@
 {
   "name": "@vortexlabs/kirari-rehype",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "Renamed to kirari-rehype. This package re-exports kirari-rehype so existing imports keep working.",
   "keywords": [
     "rehype",

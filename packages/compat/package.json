@@ -1,6 +1,6 @@
 {
   "name": "@vortexlabs/kirari",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Renamed to kirari. This package re-exports kirari so existing imports keep working.",
   "keywords": [
     "syntax-highlighting",

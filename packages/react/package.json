@@ -1,6 +1,6 @@
 {
   "name": "kirari-react",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "Kirari syntax highlighting as React elements.",
   "keywords": [
     "react",
@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
-    "kirari": "^1.0.0",
+    "kirari": "^1.2.0",
     "react": "^19"
   },
   "peerDependenciesMeta": {

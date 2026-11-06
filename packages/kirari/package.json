@@ -1,6 +1,6 @@
 {
   "name": "kirari",
-  "version": "1.1.4",
+  "version": "1.2.0",
   "description": "Small, extensible syntax highlighting without a DOM.",
   "keywords": [
     "syntax-highlighting",
