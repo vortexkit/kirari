@@ -5,7 +5,7 @@ Use raw tokens and source offsets in your own UI.
 Need a selection, a custom component, or a different rendering target? Keep the tokens and take it from there.
 
 ```js
-import { tokenize, render } from '@vortexlabs/kirari'
+import { tokenize, render } from 'kirari'
 
 const tokens = tokenize('const count = 1')
 const html = render(tokens, {

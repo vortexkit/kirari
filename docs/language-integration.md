@@ -1,13 +1,13 @@
 # Language resolution and Markdown fences
 
-These optional entry points connect language labels to the definitions you import. They do not detect a language from source code or load extra grammars. The core API and `@vortexlabs/kirari/languages/markdown` keep their existing behavior.
+These optional entry points connect language labels to the definitions you import. They do not detect a language from source code or load extra grammars. The core API and `kirari/languages/markdown` keep their existing behavior.
 
 ## Resolve labels and filenames
 
 ```ts
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import { javascript, typescript, python } from '@vortexlabs/kirari/languages'
+import { tokenize, render } from 'kirari/core'
+import { createRegistry } from 'kirari/registry'
+import { javascript, typescript, python } from 'kirari/languages'
 
 const registry = createRegistry([javascript, typescript, python])
 const source = 'const answer: number = 42'
@@ -46,10 +46,10 @@ Custom language names work without extra configuration, including as filename ex
 ## Embed registered languages in Markdown fences
 
 ```ts
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import { createMarkdown } from '@vortexlabs/kirari/markdown'
-import { javascript, python, json } from '@vortexlabs/kirari/languages'
+import { tokenize, render } from 'kirari/core'
+import { createRegistry } from 'kirari/registry'
+import { createMarkdown } from 'kirari/markdown'
+import { javascript, python, json } from 'kirari/languages'
 
 const markdown = createMarkdown(createRegistry([javascript, python, json]))
 const source = '# Example\n```js\nconst answer = 42\n```\n'

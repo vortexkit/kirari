@@ -1,13 +1,13 @@
 # Token streaming
 
-`@vortexlabs/kirari/stream` accepts appended source and returns replacement tokens. It has no
+`kirari/stream` accepts appended source and returns replacement tokens. It has no
 DOM, transport, timer, or runtime dependency. Later characters can change earlier
 classifications, so patches replace a suffix instead of blindly appending tokens.
 
 ```ts
-import { render, type Token } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages'
-import { createTokenStream, type TokenPatch } from '@vortexlabs/kirari/stream'
+import { render, type Token } from 'kirari/core'
+import { javascript } from 'kirari/languages'
+import { createTokenStream, type TokenPatch } from 'kirari/stream'
 
 const stream = createTokenStream(javascript)
 const tokens: Token[] = []
