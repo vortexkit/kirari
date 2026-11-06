@@ -2,33 +2,19 @@
 
 `kirari`, `kirari-rehype`, and `kirari-react` ship to npm as public packages. The workspace root, the docs site, and the benchmarks are private and never publish.
 
-## Compatibility packages
+## Unsupported scoped names
 
-The packages were first published as `@vortexlabs/kirari`, `@vortexlabs/kirari-rehype`, and `@vortexlabs/kirari-react`. Those names still publish from `packages/compat`, `packages/compat-rehype`, and `packages/compat-react`. Each one re-exports the unscoped package and depends on it with a caret range, so projects on the old names pick up every compatible release without a new compatibility release.
+The packages were first published as `@vortexlabs/kirari`, `@vortexlabs/kirari-rehype`, and `@vortexlabs/kirari-react`. They are unsupported and deprecated on npm. Their last releases re-export the unscoped packages and depend on them with `^1` ranges, so projects on the old names keep working and follow 1.x releases until 2.0, then stop.
 
-Release a compatibility package only when its unscoped package changes major version or adds or removes an entry point. Changesets asks for this automatically when a dependency range no longer matches. The compatibility package tests fail when the entry points differ. Use `bun run release:kirari-compat`, `bun run release:kirari-rehype-compat`, or `bun run release:kirari-react-compat`, after publishing the unscoped package it depends on.
+Do not release them again. `packages/compat`, `packages/compat-rehype`, and `packages/compat-react` remain in the repository only until they are removed, and the `release:*-compat` commands are not part of a normal release. Remove them before or with the next major release: a 2.0 takes the unscoped packages out of their `^1` ranges, and Changesets would otherwise require compatibility releases.
 
-### Deprecating the scoped names (one time)
-
-Run this once, after the first release under the unscoped names. Publish in this order: `release:kirari`, then `release:kirari-rehype` and `release:kirari-react`, then the three compatibility releases. Before deprecating, confirm that the unscoped packages are visible, so the message never points at a package that npm cannot install yet:
+The deprecation message is the notice users see on install and on the npm page. Updating it does not need a release:
 
 ```bash
-npm view kirari version
-npm view kirari-react version
-npm view kirari-rehype version
+npm deprecate @vortexlabs/kirari "Unsupported. Renamed to kirari: run npm uninstall @vortexlabs/kirari && npm install kirari, then replace @vortexlabs/kirari with kirari in imports. Follows kirari 1.x only."
+npm deprecate @vortexlabs/kirari-react "Unsupported. Renamed to kirari-react: run npm uninstall @vortexlabs/kirari-react && npm install kirari-react, then replace @vortexlabs/kirari-react with kirari-react in imports. Follows kirari-react 1.x only."
+npm deprecate @vortexlabs/kirari-rehype "Unsupported. Renamed to kirari-rehype: run npm uninstall @vortexlabs/kirari-rehype && npm install kirari-rehype, then replace @vortexlabs/kirari-rehype with kirari-rehype in imports. Follows kirari-rehype 1.x only."
 ```
-
-Then deprecate every version of the scoped names:
-
-```bash
-npm deprecate @vortexlabs/kirari "Renamed to kirari. Run: npm i kirari, then replace @vortexlabs/kirari with kirari in imports."
-npm deprecate @vortexlabs/kirari-react "Renamed to kirari-react. Run: npm i kirari-react, then replace @vortexlabs/kirari-react with kirari-react in imports."
-npm deprecate @vortexlabs/kirari-rehype "Renamed to kirari-rehype. Run: npm i kirari-rehype, then replace @vortexlabs/kirari-rehype with kirari-rehype in imports."
-```
-
-npm shows the message on every install and on the package page. Deprecation does not break installs or imports. npm stores it on each version that exists when the command runs, so a later compatibility release is not deprecated. After each `release:*-compat` command, run the same `npm deprecate` command for that package again. To undo it, run `npm deprecate <name> ""`.
-
-Deploy the docs site after these releases, because its npm links point to the unscoped packages.
 
 Versioning is driven by [Changesets](https://github.com/changesets/changesets). Each package is versioned independently. Select only the packages affected by a change when creating its changeset. For example, a React-only patch increments `kirari-react` without changing core or Rehype.
 

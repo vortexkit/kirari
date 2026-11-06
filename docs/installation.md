@@ -1,6 +1,6 @@
 # Installation
 
-Kirari is published on npm as `kirari`. Projects that installed `@vortexlabs/kirari` keep working: that package re-exports `kirari`.
+Kirari is published on npm as `kirari`. The scoped `@vortexlabs/kirari`, `@vortexlabs/kirari-react`, and `@vortexlabs/kirari-rehype` packages are unsupported. Their last versions, `@vortexlabs/kirari` 1.2.0, `@vortexlabs/kirari-react` 1.2.0, and `@vortexlabs/kirari-rehype` 1.1.0, re-export 1.x of the unscoped packages, so existing projects keep working. Earlier scoped versions do not follow unscoped releases, and no scoped version follows 2.0 or later. Replace them with `kirari`, `kirari-react`, and `kirari-rehype` to keep receiving updates.
 
 ```sh
 npm install kirari
