@@ -122,6 +122,18 @@ try {
     }
     assert.ok(!await readdir(join(legacy, 'node_modules', name, 'node_modules')).catch(() => undefined), `${name} must share the top-level kirari packages`)
   }
+  for (const name of ['kirari-rehype', 'kirari-react']) {
+    assert.ok(!await readdir(join(legacy, 'node_modules', name, 'node_modules')).catch(() => undefined), `${name} must share the top-level kirari package`)
+  }
+  await writeFile(join(legacy, 'identity.mjs'), `
+    import { highlight } from 'kirari';
+    import { highlight as scoped } from '@vortexlabs/kirari';
+    import { createTokenStream } from 'kirari/stream';
+    import { createTokenStream as scopedStream } from '@vortexlabs/kirari/stream';
+    if (scoped !== highlight || scopedStream !== createTokenStream) {
+      throw new Error('@vortexlabs/kirari must re-export the installed kirari, not a second copy');
+    }
+  `)
   await writeFile(join(legacy, 'consumer.ts'), scoped(await readFile(join(root, 'checks/pack-consumer.ts'), 'utf8')))
   await writeFile(join(legacy, 'tsconfig.json'), await readFile(join(consumer, 'tsconfig.json')))
   await writeFile(join(legacy, 'exports.mjs'), scoped(await readFile(join(consumer, 'exports.mjs'), 'utf8')))
@@ -129,6 +141,7 @@ try {
   for (const runtime of ['node', 'bun']) {
     run([runtime, 'dist/consumer.js'], legacy)
     run([runtime, 'exports.mjs'], legacy)
+    run([runtime, 'identity.mjs'], legacy)
   }
   console.log(`Packed packages and scoped compatibility packages installed outside workspace; TypeScript, Node, Bun, ${names.length} languages and CSS exports passed.`)
 } finally {

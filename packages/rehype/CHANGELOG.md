@@ -1,4 +1,4 @@
-# @vortexlabs/kirari-rehype
+# kirari-rehype
 
 ## 1.1.0
 

@@ -1,4 +1,4 @@
-# @vortexlabs/kirari
+# kirari
 
 ## 1.2.0
 

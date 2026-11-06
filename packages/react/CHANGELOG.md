@@ -1,4 +1,4 @@
-# @vortexlabs/kirari-react
+# kirari-react
 
 ## 1.2.0
 
