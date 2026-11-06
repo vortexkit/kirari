@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { json } from '@vortexlabs/kirari/languages/json'
+import { javascript } from 'kirari/languages/javascript'
+import { json } from 'kirari/languages/json'
 import { highlight } from '../adapters.js'
 import { textFromHTML } from '../benchmark.js'
 import { diagnosticStreamingInputs, prepareCheckpointReplay, prepareReplay, replay, replayCheckpoint, streamingInputs, updateEnds } from '../streaming.js'

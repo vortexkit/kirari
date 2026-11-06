@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import { tokenize } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import { tokenize } from 'kirari/core'
+import { javascript } from 'kirari/languages/javascript'
 import { renderCode } from './render.js'
 import type { CodeProps } from './types.js'
 
@@ -18,5 +18,5 @@ export const Code = ({ children, tokens, language = javascript, ...props }: Code
   return renderCode(tokens ?? tokenize(sourceText(children), language), props)
 }
 
-export type { Decoration } from '@vortexlabs/kirari/decorations'
-export type { Language, Token } from '@vortexlabs/kirari/core'
+export type { Decoration } from 'kirari/decorations'
+export type { Language, Token } from 'kirari/core'

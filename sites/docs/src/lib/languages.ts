@@ -48,7 +48,7 @@ import {
 	xml,
 	yaml,
 	zig,
-} from '@vortexlabs/kirari/languages'
+} from 'kirari/languages'
 
 export const languageEntries: readonly Types.LanguageEntry[] = [
 	{
@@ -324,7 +324,7 @@ class Greeting {
 		group: 'Programming',
 		language: javascript,
 		filename: 'hello.js',
-		sample: `import { highlight } from '@vortexlabs/kirari'
+		sample: `import { highlight } from 'kirari'
 
 const message = 'Hello, world!'
 const html = highlight(message)

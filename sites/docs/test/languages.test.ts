@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
 import { readdirSync } from 'node:fs'
-import { highlight, tokenize } from '@vortexlabs/kirari'
+import { highlight, tokenize } from 'kirari'
 import { languageEntries } from '@/lib/languages.js'
 
 test('the playground covers every public language exactly once', () => {

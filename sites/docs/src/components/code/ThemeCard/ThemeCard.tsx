@@ -1,6 +1,6 @@
 import styles from './ThemeCard.module.css'
-import { highlight } from '@vortexlabs/kirari'
-import { typescript } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { typescript } from 'kirari/languages'
 import { HighlightedCode } from '@/components/code/HighlightedCode'
 import type * as Types from './ThemeCard.types'
 

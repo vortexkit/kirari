@@ -5,7 +5,7 @@ import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
+import rehypeKirari from 'kirari-rehype'
 import { languageEntries } from './languages'
 import type * as Types from './navigation.types'
 

@@ -1,5 +1,5 @@
 import type { ElementContent } from 'hast'
-import type { Token } from '@vortexlabs/kirari/core'
+import type { Token } from 'kirari/core'
 import type { Options } from './index.js'
 
 export const classes = (value: unknown): string[] => {

@@ -7,9 +7,9 @@ test('Node renders the built component without Bun or DOM globals', () => {
     import assert from 'node:assert/strict';
     import { createElement } from 'react';
     import { renderToStaticMarkup } from 'react-dom/server';
-    import { Code } from '@vortexlabs/kirari-react';
-    import { applyPatch } from '@vortexlabs/kirari-react/stream';
-    import { python } from '@vortexlabs/kirari/languages/python';
+    import { Code } from 'kirari-react';
+    import { applyPatch } from 'kirari-react/stream';
+    import { python } from 'kirari/languages/python';
     assert.equal(typeof document, 'undefined');
     assert.equal(typeof Bun, 'undefined');
     const html = renderToStaticMarkup(createElement(Code, { language: python, lines: true }, 'print(1)'));

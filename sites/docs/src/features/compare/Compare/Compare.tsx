@@ -1,7 +1,7 @@
 import styles from './Compare.module.css'
 import type { CSSProperties } from 'react'
-import { highlight } from '@vortexlabs/kirari'
-import { typescript } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { typescript } from 'kirari/languages'
 import {
 	alternatives,
 	features,

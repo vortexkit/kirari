@@ -2,12 +2,12 @@ import type * as Types from './Playground.types'
 
 export const usageCode = (props: Types.UsageOptions) => {
 	const { name, theme, source, usage } = props
-	const imports = `import { ${name} } from '@vortexlabs/kirari/languages'
-import '@vortexlabs/kirari/themes/${theme}.css'`
+	const imports = `import { ${name} } from 'kirari/languages'
+import 'kirari/themes/${theme}.css'`
 	const literal = (value: string) =>
 		`\`${value.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${')}\``
 	if (usage === 'react')
-		return `import { Code } from '@vortexlabs/kirari-react'
+		return `import { Code } from 'kirari-react'
 ${imports}
 
 const code = ${literal(source)}
@@ -26,7 +26,7 @@ export const Example = () => <Code language={${name}}>{code}</Code>`
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
+import rehypeKirari from 'kirari-rehype'
 ${imports}
 
 const markdown = ${literal(`${fence}${name}\n${source}\n${fence}`)}
@@ -38,7 +38,7 @@ const html = String(await unified()
   .use(rehypeStringify)
   .process(markdown))`
 	}
-	return `import { highlight } from '@vortexlabs/kirari'
+	return `import { highlight } from 'kirari'
 ${imports}
 
 const code = ${literal(source)}

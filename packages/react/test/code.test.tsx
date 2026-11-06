@@ -1,10 +1,10 @@
 import { expect, test } from 'bun:test'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { tokenize } from '@vortexlabs/kirari/core'
-import { renderDecorated } from '@vortexlabs/kirari/decorations'
-import type { DecoratedRenderOptions } from '@vortexlabs/kirari/decorations'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { python } from '@vortexlabs/kirari/languages/python'
+import { tokenize } from 'kirari/core'
+import { renderDecorated } from 'kirari/decorations'
+import type { DecoratedRenderOptions } from 'kirari/decorations'
+import { javascript } from 'kirari/languages/javascript'
+import { python } from 'kirari/languages/python'
 import { Code } from '../src/index.js'
 
 // React and Kirari escape apostrophes with different but equivalent entities.

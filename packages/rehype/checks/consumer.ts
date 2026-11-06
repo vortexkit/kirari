@@ -1,7 +1,7 @@
 import { unified } from 'unified'
-import rehypeKirari, { type Options } from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import type { Token } from '@vortexlabs/kirari/core'
+import rehypeKirari, { type Options } from 'kirari-rehype'
+import { javascript } from 'kirari/languages/javascript'
+import type { Token } from 'kirari/core'
 
 const options: Options = {
   languages: [javascript],

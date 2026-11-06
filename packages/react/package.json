@@ -1,5 +1,5 @@
 {
-  "name": "@vortexlabs/kirari-react",
+  "name": "kirari-react",
   "version": "1.1.1",
   "description": "Kirari syntax highlighting as React elements.",
   "keywords": [
@@ -43,7 +43,7 @@
   },
   "peerDependencies": {
     "@types/react": "^19",
-    "@vortexlabs/kirari": "^1.0.0",
+    "kirari": "^1.0.0",
     "react": "^19"
   },
   "peerDependenciesMeta": {
@@ -55,7 +55,7 @@
     "@happy-dom/global-registrator": "^20.14.6",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vortexlabs/kirari": "workspace:*",
+    "kirari": "workspace:*",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },

@@ -135,8 +135,8 @@ export const streamingResults = [
 export const snippets = [
 	{
 		id: 'kirari',
-		code: `import { highlight } from '@vortexlabs/kirari'
-import '@vortexlabs/kirari/theme.css'
+		code: `import { highlight } from 'kirari'
+import 'kirari/theme.css'
 
 const html = highlight('const answer = 42')`,
 	},

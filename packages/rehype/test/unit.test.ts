@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
 import type { Element, Root } from 'hast'
-import type { Language, Token } from '@vortexlabs/kirari/core'
+import type { Language, Token } from 'kirari/core'
 import rehypeKirari, { type Options } from '../src/index.js'
 
 const plain: Language = { name: 'plain', rules: [] }

@@ -1,4 +1,4 @@
-import type { Language } from '@vortexlabs/kirari'
+import type { Language } from 'kirari'
 
 export type LanguageEntry = {
 	id: string

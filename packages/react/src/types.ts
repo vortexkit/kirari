@@ -1,6 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react'
-import type { Language, Token } from '@vortexlabs/kirari/core'
-import type { Decoration } from '@vortexlabs/kirari/decorations'
+import type { Language, Token } from 'kirari/core'
+import type { Decoration } from 'kirari/decorations'
 
 /** A one-based line number or an inclusive pair of line numbers. */
 export type LineRange = number | readonly [first: number, last: number]

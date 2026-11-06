@@ -1,9 +1,9 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import type { Language, Token } from '@vortexlabs/kirari/core'
-import { createTokenStream } from '@vortexlabs/kirari/stream'
-import type { TokenPatch, TokenStream } from '@vortexlabs/kirari/stream'
+import type { Language, Token } from 'kirari/core'
+import { createTokenStream } from 'kirari/stream'
+import type { TokenPatch, TokenStream } from 'kirari/stream'
 
 export type StreamedTokens = {
   readonly tokens: readonly Token[]

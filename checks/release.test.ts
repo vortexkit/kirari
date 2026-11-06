@@ -6,7 +6,24 @@ import { fileURLToPath } from 'node:url'
 
 const release = fileURLToPath(new URL('../bin/release.sh', import.meta.url))
 const root = fileURLToPath(new URL('..', import.meta.url))
-const packages = [['kirari', '@vortexlabs/kirari'], ['rehype', '@vortexlabs/kirari-rehype'], ['react', '@vortexlabs/kirari-react']] as const
+const packages = [
+  ['kirari', 'kirari'], ['rehype', 'kirari-rehype'], ['react', 'kirari-react'],
+  ['compat', '@vortexlabs/kirari'], ['compat-rehype', '@vortexlabs/kirari-rehype'], ['compat-react', '@vortexlabs/kirari-react'],
+] as const
+const unchanged = Object.fromEntries(packages.map(([id]) => [id, '0.1.0']))
+const noChangelogs = Object.fromEntries(packages.map(([id]) => [id, false]))
+
+const fixtureDependencies: Record<string, object> = {
+  kirari: {},
+  compat: { dependencies: { kirari: '^0.1.0' } },
+  rehype: { peerDependencies: { kirari: '^0.1.0' } },
+  react: { peerDependencies: { kirari: '^0.1.0' } },
+  'compat-rehype': { dependencies: { kirari: '^0.1.0', 'kirari-rehype': '^0.1.0' } },
+  'compat-react': { dependencies: { kirari: '^0.1.0', 'kirari-react': '^0.1.0' } },
+}
+
+const changesetPackage = (name: string) => name.startsWith('compat:') ? `@vortexlabs/${name.slice(7)}` : name
+const changesetFile = (name: string) => name.replace(':', '-')
 
 // Run the real release script and tarball checks; replace remote writes and waiting.
 const runRelease = async (options: {
@@ -27,12 +44,12 @@ const runRelease = async (options: {
     await writeFile(join(directory, 'package.json'), JSON.stringify({ name: 'release-fixture', private: true, workspaces: ['packages/*'] }))
     await symlink(join(root, 'node_modules'), join(directory, 'node_modules'))
     for (const [name, bump] of Object.entries(options.changes ?? {})) {
-      await writeFile(join(directory, '.changeset', `${name}.md`), `---\n"@vortexlabs/${name}": ${bump}\n---\n\nUpdate ${name}.\n`)
+      await writeFile(join(directory, '.changeset', `${changesetFile(name)}.md`), `---\n"${changesetPackage(name)}": ${bump}\n---\n\nUpdate ${name}.\n`)
     }
     const workspaces: Record<string, { name: string, version: string }> = {}
     for (const [id, name] of packages) {
       await mkdir(join(directory, 'packages', id), { recursive: true })
-      const manifest = { name, version: '0.1.0', ...(id === 'kirari' ? {} : { peerDependencies: { '@vortexlabs/kirari': '^0.1.0' } }) }
+      const manifest = { name, version: '0.1.0', ...fixtureDependencies[id] }
       workspaces[`packages/${id}`] = manifest
       await writeFile(join(directory, 'packages', id, 'package.json'), JSON.stringify(manifest))
     }
@@ -83,9 +100,12 @@ const runRelease = async (options: {
         if [ "$1" != view ]; then echo "Unexpected npm command: $*" >&2; return 1; fi
         local id count=0
         case "$2" in
-          @vortexlabs/kirari@*) id=kirari ;;
-          @vortexlabs/kirari-rehype@*) id=rehype ;;
-          @vortexlabs/kirari-react@*) id=react ;;
+          kirari@*) id=kirari ;;
+          kirari-rehype@*) id=rehype ;;
+          kirari-react@*) id=react ;;
+          @vortexlabs/kirari@*) id=compat ;;
+          @vortexlabs/kirari-rehype@*) id=compat-rehype ;;
+          @vortexlabs/kirari-react@*) id=compat-react ;;
           *) echo "Unexpected package: $2" >&2; return 1 ;;
         esac
         echo "view $id $*" >> "$RELEASE_FIXTURE/events"
@@ -140,41 +160,43 @@ const runRelease = async (options: {
 }
 
 test.each([
-  ['react', 'kirari-react', { kirari: '0.1.0', rehype: '0.1.0', react: '0.1.1' }],
-  ['rehype', 'kirari-rehype', { kirari: '0.1.0', rehype: '0.1.1', react: '0.1.0' }],
-  ['kirari', 'kirari', { kirari: '0.1.1', rehype: '0.1.0', react: '0.1.0' }],
-] as const)('a %s patch changeset versions only that package', async (filter, name, versions) => {
-  const result = await runRelease({ args: ['--filter', filter], changes: { [name]: 'patch' } })
+  ['react', 'kirari-react'],
+  ['rehype', 'kirari-rehype'],
+  ['kirari', 'kirari'],
+  ['compat', 'compat:kirari'],
+  ['compat-react', 'compat:kirari-react'],
+] as const)('a %s patch changeset versions only that package', async (filter, change) => {
+  const result = await runRelease({ args: ['--filter', filter], changes: { [change]: 'patch' } })
   expect(result.exitCode, result.output).toBe(0)
-  expect(result.versions).toEqual(versions)
-  expect(result.changelogs).toEqual({ kirari: filter === 'kirari', rehype: filter === 'rehype', react: filter === 'react' })
+  expect(result.versions).toEqual({ ...unchanged, [filter]: '0.1.1' })
+  expect(result.changelogs).toEqual({ ...noChangelogs, [filter]: true })
   expect(result.remainingChangesets).toEqual([])
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual([`publish ${filter}`])
-  expect(result.events).toContain(`git tag @vortexlabs/${name}@0.1.1`)
+  expect(result.events).toContain(`git tag ${changesetPackage(change)}@0.1.1`)
 })
 
-test('core changes requiring new peer ranges need explicit integration changesets before versioning', async () => {
+test('core changes requiring new ranges need explicit integration and compatibility changesets before versioning', async () => {
   const result = await runRelease({ args: ['--filter', 'kirari'], changes: { kirari: 'minor' } })
   expect(result.exitCode).not.toBe(0)
   expect(result.output).toContain('explicit changeset')
-  expect(result.output).toContain('@vortexlabs/kirari-react')
-  expect(result.output).toContain('@vortexlabs/kirari-rehype')
-  expect(result.versions).toEqual({ kirari: '0.1.0', rehype: '0.1.0', react: '0.1.0' })
+  for (const [id, name] of packages) if (id !== 'kirari') expect(result.output).toContain(name)
+  expect(result.versions).toEqual(unchanged)
   expect(result.remainingChangesets).toEqual(['kirari.md'])
   expect(result.events).not.toContain('changeset version')
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual([])
 })
 
-test('explicit integration changesets allow a core update while publishing only core', async () => {
+test('explicit changesets allow a core update while publishing only core', async () => {
   const result = await runRelease({ args: ['--filter', 'kirari'], changes: {
     kirari: 'minor', 'kirari-react': 'minor', 'kirari-rehype': 'minor',
+    'compat:kirari': 'minor', 'compat:kirari-react': 'minor', 'compat:kirari-rehype': 'minor',
   } })
   expect(result.exitCode, result.output).toBe(0)
-  expect(result.versions.kirari).toBe('0.2.0')
-  expect(result.changelogs).toEqual({ kirari: true, rehype: true, react: true })
+  expect(result.versions).toEqual(Object.fromEntries(packages.map(([id]) => [id, '0.2.0'])))
+  expect(result.changelogs).toEqual(Object.fromEntries(packages.map(([id]) => [id, true])))
   expect(result.remainingChangesets).toEqual([])
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish kirari'])
-  expect(result.events).toContain('git tag @vortexlabs/kirari@0.2.0')
+  expect(result.events).toContain('git tag kirari@0.2.0')
 })
 
 test('release waits for registry visibility and publishes the selected package only once', async () => {
@@ -182,10 +204,10 @@ test('release waits for registry visibility and publishes the selected package o
   expect(result.exitCode).toBe(0)
   expect(result.output.match(/Waiting for registry availability/g)).toHaveLength(1)
   expect(result.output).not.toContain('retrying in')
-  expect(result.output).toContain('Published and available on npm: @vortexlabs/kirari-react@0.1.0')
+  expect(result.output).toContain('Published and available on npm: kirari-react@0.1.0')
   expect(result.output.indexOf('Waiting for registry availability')).toBeLessThan(result.output.indexOf('Published and available on npm:'))
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish react'])
-  expect(result.events.filter(event => event.startsWith('git tag '))).toEqual(['git tag @vortexlabs/kirari-react@0.1.0'])
+  expect(result.events.filter(event => event.startsWith('git tag '))).toEqual(['git tag kirari-react@0.1.0'])
   expect(result.events.at(-1)).toBe('git push --tags')
   expect(result.events.filter(event => event.startsWith('view ')).every(event => event.includes('--prefer-online'))).toBe(true)
   expect(result.output).not.toContain('\r')
@@ -198,23 +220,23 @@ test('interactive registry waits show a live countdown and finish with a package
   expect(result.output).toContain('\r\x1b[K⏳ Waiting for npm; next check in  1s')
   expect(result.events.filter(event => event === 'sleep 1')).toHaveLength(30)
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish react'])
-  expect(result.output).toContain('Release of @vortexlabs/kirari-react@0.1.0 completed successfully!')
-  expect(result.output).toContain('Package available: https://www.npmjs.com/package/@vortexlabs/kirari-react/v/0.1.0')
-  expect(result.output).toContain('Git tag pushed: @vortexlabs/kirari-react@0.1.0')
+  expect(result.output).toContain('Release of kirari-react@0.1.0 completed successfully!')
+  expect(result.output).toContain('Package available: https://www.npmjs.com/package/kirari-react/v/0.1.0')
+  expect(result.output).toContain('Git tag pushed: kirari-react@0.1.0')
 })
 
 test('release skips publishing when the selected package version already exists', async () => {
   const result = await runRelease({ existing: ['react'] })
   expect(result.exitCode).toBe(0)
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual([])
-  expect(result.output).toContain('Release of @vortexlabs/kirari-react@0.1.0 completed successfully!')
+  expect(result.output).toContain('Release of kirari-react@0.1.0 completed successfully!')
 })
 
 test('release publishes React when core and Rehype are already on npm', async () => {
   const result = await runRelease({ existing: ['kirari', 'rehype'], delay: 2 })
   expect(result.exitCode).toBe(0)
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish react'])
-  expect(result.events).toContain('git tag @vortexlabs/kirari-react@0.1.0')
+  expect(result.events).toContain('git tag kirari-react@0.1.0')
   expect(result.events.at(-1)).toBe('git push --tags')
 })
 
@@ -225,7 +247,7 @@ test('release waits through several minutes of npm processing without uploading 
   const waited = result.events.filter(event => event.startsWith('sleep '))
     .reduce((seconds, event) => seconds + Number(event.split(' ')[1]), 0)
   expect(waited).toBeGreaterThanOrEqual(180)
-  expect(result.events).toContain('git tag @vortexlabs/kirari-react@0.1.0')
+  expect(result.events).toContain('git tag kirari-react@0.1.0')
 })
 
 test('release accepts visibility on the final verification attempt after twenty minutes of waiting', async () => {
@@ -234,13 +256,11 @@ test('release accepts visibility on the final verification attempt after twenty 
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish react'])
   expect(result.events.filter(event => event === 'sleep 30')).toHaveLength(40)
   expect(result.output.match(/Still waiting for registry confirmation/g)).toHaveLength(9)
-  expect(result.output).toContain('Published and available on npm: @vortexlabs/kirari-react@0.1.0')
+  expect(result.output).toContain('Published and available on npm: kirari-react@0.1.0')
 })
 
 test.each([
-  ['kirari', '@vortexlabs/kirari'],
-  ['rehype', '@vortexlabs/kirari-rehype'],
-  ['react', '@vortexlabs/kirari-react'],
+  ...packages,
 ])('filtered release publishes and tags only %s', async (filter, name) => {
   const result = await runRelease({ args: ['--filter', filter!] })
   expect(result.exitCode).toBe(0)
@@ -274,7 +294,7 @@ test('release recovers when an existing version is missing from the initial regi
   expect(result.exitCode).toBe(0)
   expect(result.output).toContain('You cannot publish over the previously published versions')
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish rehype'])
-  expect(result.events).toContain('git tag @vortexlabs/kirari-rehype@0.1.0')
+  expect(result.events).toContain('git tag kirari-rehype@0.1.0')
 })
 
 test('a previously used but unavailable version is not tagged or treated as published', async () => {
@@ -282,7 +302,7 @@ test('a previously used but unavailable version is not tagged or treated as publ
   expect(result.exitCode).not.toBe(0)
   expect(result.output).toContain('You cannot publish over the previously published versions')
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish rehype'])
-  expect(result.events).not.toContain('git tag @vortexlabs/kirari-rehype@0.1.0')
+  expect(result.events).not.toContain('git tag kirari-rehype@0.1.0')
 })
 
 test('immediately visible releases do not wait', async () => {
@@ -290,7 +310,7 @@ test('immediately visible releases do not wait', async () => {
   expect(result.exitCode).toBe(0)
   expect(result.events.filter(event => event.startsWith('sleep '))).toEqual([])
   expect(result.output).not.toContain('Waiting for registry availability')
-  expect(result.output).toContain('Published and available on npm: @vortexlabs/kirari-react@0.1.0')
+  expect(result.output).toContain('Published and available on npm: kirari-react@0.1.0')
 })
 
 test('failed publishing stops without retrying the publish', async () => {
@@ -298,7 +318,7 @@ test('failed publishing stops without retrying the publish', async () => {
   expect(result.exitCode).not.toBe(0)
   expect(result.output).toContain('E403 publish denied')
   expect(result.events.filter(event => event.startsWith('publish '))).toEqual(['publish rehype'])
-  expect(result.events).not.toContain('git tag @vortexlabs/kirari-rehype@0.1.0')
+  expect(result.events).not.toContain('git tag kirari-rehype@0.1.0')
   expect(result.events).not.toContain('git push --tags')
 })
 
@@ -319,6 +339,6 @@ test.each(['npm error E404 package not found', 'npm error E503 registry unavaila
       .reduce((seconds, event) => seconds + Number(event.split(' ')[1]), 0)
     expect(waited).toBe(1200)
     expect(result.output).toContain('may still be processing')
-    expect(result.output).toContain('npm view @vortexlabs/kirari@0.1.0 version --prefer-online')
+    expect(result.output).toContain('npm view kirari@0.1.0 version --prefer-online')
   },
 )
