@@ -21,7 +21,7 @@ await reexport('index', 'kirari')
 for (const entry of ['core', 'stream', 'decorations', 'registry', 'markdown', 'languages']) {
   await reexport(entry, `kirari/${entry}`)
 }
-const languages = (await readdir(join(kirari, 'dist/languages'))).filter(name => name.endsWith('.js'))
+const languages = (await readdir(join(kirari, 'dist/languages')).catch(() => [])).filter(name => name.endsWith('.js'))
 if (!languages.length) throw new Error('Build kirari before @vortexlabs/kirari: no languages found in kirari/dist.')
 for (const name of languages) {
   await reexport(`languages/${name.slice(0, -3)}`, `kirari/languages/${name.slice(0, -3)}`)

@@ -26,7 +26,7 @@ npm deprecate @vortexlabs/kirari-react "Renamed to kirari-react. Run: npm i kira
 npm deprecate @vortexlabs/kirari-rehype "Renamed to kirari-rehype. Run: npm i kirari-rehype, then replace @vortexlabs/kirari-rehype with kirari-rehype in imports."
 ```
 
-npm shows the message on every install and on the package page. Deprecation does not break installs or imports. The compatibility packages keep publishing as described above, and later releases inherit the deprecation. To undo it, run `npm deprecate <name> ""`.
+npm shows the message on every install and on the package page. Deprecation does not break installs or imports. npm stores it on each version that exists when the command runs, so a later compatibility release is not deprecated. After each `release:*-compat` command, run the same `npm deprecate` command for that package again. To undo it, run `npm deprecate <name> ""`.
 
 Deploy the docs site after these releases, because its npm links point to the unscoped packages.
 

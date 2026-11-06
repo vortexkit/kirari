@@ -6,7 +6,7 @@ import * as rehype from 'kirari-rehype'
 test('exposes the same entry points as kirari-rehype', async () => {
   const read = async (path: string) => JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))
   const [compat, real] = await Promise.all([read('../package.json'), read('../../rehype/package.json')])
-  expect(Object.keys(compat.exports)).toEqual(Object.keys(real.exports))
+  expect(Object.keys(compat.exports).sort()).toEqual(Object.keys(real.exports).sort())
 })
 
 test('re-exports the same objects as kirari-rehype, including the default plugin', () => {

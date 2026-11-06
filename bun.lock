@@ -71,7 +71,7 @@
       },
       "peerDependencies": {
         "@types/react": "^19",
-        "kirari": "^1.2.0",
+        "kirari": "^1.0.0",
         "react": "^19",
       },
       "optionalPeers": [
@@ -98,7 +98,7 @@
         "unified": "^11.0.5",
       },
       "peerDependencies": {
-        "kirari": "^1.2.0",
+        "kirari": "^1.0.0",
       },
     },
     "sites/docs": {

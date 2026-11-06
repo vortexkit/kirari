@@ -9,7 +9,7 @@ const read = async (path: string) => JSON.parse(await readFile(new URL(path, imp
 
 test('exposes the same entry points as kirari-react', async () => {
   const [compat, real] = await Promise.all([read('../package.json'), read('../../react/package.json')])
-  expect(Object.keys(compat.exports)).toEqual(Object.keys(real.exports))
+  expect(Object.keys(compat.exports).sort()).toEqual(Object.keys(real.exports).sort())
   expect(compat.peerDependencies).toEqual(Object.fromEntries(Object.entries(real.peerDependencies).filter(([name]) => name !== 'kirari')))
 })
 
