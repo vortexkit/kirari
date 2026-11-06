@@ -1,4 +1,4 @@
-# Kirari
+# ✨ Kirari
 
 Kirari is a small, dependency-free syntax highlighter for JavaScript and
 TypeScript apps. It turns source code into escaped HTML or a token array on the
