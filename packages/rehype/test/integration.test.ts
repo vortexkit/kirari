@@ -9,9 +9,9 @@ import { compile, run } from '@mdx-js/mdx'
 import { createElement } from 'react'
 import * as runtime from 'react/jsx-runtime'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { tokenize, type Language, type Token } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import { tsx } from '@vortexlabs/kirari/languages/tsx'
+import { tokenize, type Language, type Token } from 'kirari/core'
+import { javascript } from 'kirari/languages/javascript'
+import { tsx } from 'kirari/languages/tsx'
 import rehypeKirari, { type Options } from '../src/index.js'
 
 const block = (source: string, label?: string, meta?: string): Root => {

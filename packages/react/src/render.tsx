@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
-import type { Token } from '@vortexlabs/kirari/core'
-import type { Decoration } from '@vortexlabs/kirari/decorations'
+import type { Token } from 'kirari/core'
+import type { Decoration } from 'kirari/decorations'
 import type { CodeProps, LineRange } from './types.js'
 
 const join = (...names: (string | undefined)[]): string => {

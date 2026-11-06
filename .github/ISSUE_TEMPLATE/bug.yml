@@ -11,9 +11,9 @@ body:
     attributes:
       label: Package
       options:
-        - "@vortexlabs/kirari"
-        - "@vortexlabs/kirari-rehype"
-        - "@vortexlabs/kirari-react"
+        - "kirari"
+        - "kirari-rehype"
+        - "kirari-react"
         - Documentation site
     validations:
       required: true

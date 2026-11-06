@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
+import rehypeKirari from 'kirari-rehype'
+import { javascript } from 'kirari/languages/javascript'
 import { unified } from 'unified'
 import type { Root } from 'hast'
 
@@ -18,8 +18,8 @@ test('built ESM package works in Bun through public exports', async () => {
 test('Node runs built ESM without Bun or DOM globals', () => {
   const result = Bun.spawnSync(['node', '--input-type=module', '-e', `
     import assert from 'node:assert/strict';
-    import rehypeKirari from '@vortexlabs/kirari-rehype';
-    import { javascript } from '@vortexlabs/kirari/languages/javascript';
+    import rehypeKirari from 'kirari-rehype';
+    import { javascript } from 'kirari/languages/javascript';
     import { unified } from 'unified';
     import remarkParse from 'remark-parse';
     import remarkRehype from 'remark-rehype';

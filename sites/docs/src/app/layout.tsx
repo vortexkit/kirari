@@ -5,7 +5,7 @@ import type * as Types from './layout.types'
 import { description } from '@/lib/seo'
 import { site } from '@/lib/site'
 import { paletteCSS } from '@/lib/themes'
-import '@vortexlabs/kirari/theme.css'
+import 'kirari/theme.css'
 import '@/styles/style.css'
 
 export const metadata: Metadata = {

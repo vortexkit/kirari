@@ -7,8 +7,8 @@ From components to configuration files. Import the definitions you need; the oth
 Import from `/core` to ship only Python. The main entry always bundles JavaScript as its default.
 
 ```js
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { python } from '@vortexlabs/kirari/languages'
+import { tokenize, render } from 'kirari/core'
+import { python } from 'kirari/languages'
 
 const html = render(tokenize('print("Hello, world!")', python))
 ```
@@ -64,6 +64,6 @@ const html = render(tokenize('print("Hello, world!")', python))
 | YAML | `yaml` |
 | Zig | `zig` |
 
-Every definition is a named export of `@vortexlabs/kirari/languages`; bundlers keep only the ones you import. Without a bundler, import one file instead, such as `@vortexlabs/kirari/languages/python`.
+Every definition is a named export of `kirari/languages`; bundlers keep only the ones you import. Without a bundler, import one file instead, such as `kirari/languages/python`.
 
 JSX and TSX are separate definitions. Use `hcl` for Terraform and `shell` for common shell syntax. These are lexical grammars, not compiler parsers.

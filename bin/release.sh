@@ -81,12 +81,12 @@ verify_published_package() {
 }
 
 if [ "$#" -ne 2 ] || [ "$1" != --filter ]; then
-    print_error "Usage: bash bin/release.sh --filter kirari|rehype|react"
+    print_error "Usage: bash bin/release.sh --filter kirari|compat|compat-react|compat-rehype|rehype|react"
     exit 1
 fi
 case "$2" in
-    kirari|rehype|react) PACKAGE_DIR="packages/$2" ;;
-    *) print_error "Unknown filter: $2. Use kirari, rehype or react."; exit 1 ;;
+    kirari|compat|compat-react|compat-rehype|rehype|react) PACKAGE_DIR="packages/$2" ;;
+    *) print_error "Unknown filter: $2. Use kirari, compat, compat-react, compat-rehype, rehype or react."; exit 1 ;;
 esac
 PUBLISH_TARGET=$(manifest_field "$PACKAGE_DIR" name)
 echo "${BLUE}📦 Publish only: $PUBLISH_TARGET${NC}"

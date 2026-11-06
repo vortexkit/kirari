@@ -2,12 +2,12 @@
 
 Highlight code blocks while building Markdown and MDX documents.
 
-`@vortexlabs/kirari-rehype` highlights code blocks in Markdown and MDX at build time. The browser gets plain HTML and CSS, no highlighter.
+`kirari-rehype` highlights code blocks in Markdown and MDX at build time. The browser gets plain HTML and CSS, no highlighter.
 
 Different from [Markdown fences](/docs/markdown/): that highlights Markdown *source*. This plugin highlights code blocks in the rendered document.
 
 ```sh
-npm install @vortexlabs/kirari @vortexlabs/kirari-rehype
+npm install kirari kirari-rehype
 ```
 
 ```js
@@ -15,8 +15,8 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages'
+import rehypeKirari from 'kirari-rehype'
+import { javascript } from 'kirari/languages'
 
 const processor = unified()
   .use(remarkParse)
@@ -34,8 +34,8 @@ Pass the languages you need; labels like `js` resolve via the registry. Nothing 
 
 ```js
 import { compile } from '@mdx-js/mdx'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages'
+import rehypeKirari from 'kirari-rehype'
+import { javascript } from 'kirari/languages'
 
 const markdown = '```js\nconst answer = 42\n```'
 const compiled = await compile(markdown, {
@@ -43,7 +43,7 @@ const compiled = await compile(markdown, {
 })
 ```
 
-Import `@vortexlabs/kirari/theme.css` once. Blocks get `pre.kirari` and the usual `.kirari-*` classes and variables. Custom MDX code components must forward props and children.
+Import `kirari/theme.css` once. Blocks get `pre.kirari` and the usual `.kirari-*` classes and variables. Custom MDX code components must forward props and children.
 
 ## Point readers to a line
 

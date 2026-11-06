@@ -5,10 +5,10 @@ Resolve language aliases and highlight fenced code blocks.
 Build a registry from the languages you import, then pass it to `createMarkdown` to highlight fence bodies. The registry resolves names, aliases, and filenames.
 
 ````js
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import { createMarkdown } from '@vortexlabs/kirari/markdown'
-import { javascript, json } from '@vortexlabs/kirari/languages'
+import { tokenize, render } from 'kirari/core'
+import { createRegistry } from 'kirari/registry'
+import { createMarkdown } from 'kirari/markdown'
+import { javascript, json } from 'kirari/languages'
 
 const registry = createRegistry([javascript, json])
 registry.resolve(' JS ')       // javascript

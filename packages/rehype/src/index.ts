@@ -1,8 +1,8 @@
 import type { Element, ElementContent, Root } from 'hast'
-import { tokenize } from '@vortexlabs/kirari/core'
-import type { Language, RenderOptions } from '@vortexlabs/kirari/core'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import type { LanguageRegistry } from '@vortexlabs/kirari/registry'
+import { tokenize } from 'kirari/core'
+import type { Language, RenderOptions } from 'kirari/core'
+import { createRegistry } from 'kirari/registry'
+import type { LanguageRegistry } from 'kirari/registry'
 import { lineRanges } from './metadata.js'
 import { classes, tokenNodes } from './render.js'
 

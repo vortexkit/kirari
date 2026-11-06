@@ -16,14 +16,14 @@ highlighter, not a parser.
 ## Quick start
 
 ```sh
-npm install @vortexlabs/kirari
+npm install kirari
 ```
 
 In an application that supports CSS imports:
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import '@vortexlabs/kirari/theme.css'
+import { highlight } from 'kirari'
+import 'kirari/theme.css'
 
 const code = 'const count = 42'
 const html = `<pre class="kirari"><code>${highlight(code)}</code></pre>`
@@ -33,8 +33,8 @@ Use `html` in your page template. JavaScript is the default language, and code
 text is HTML-escaped. Import other languages explicitly:
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import { python } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { python } from 'kirari/languages'
 
 const html = highlight('print("Hello")', { language: python })
 ```
@@ -46,9 +46,9 @@ develop the library; applications do not need Bun to use it.
 
 | Package | Use it for |
 | --- | --- |
-| [`@vortexlabs/kirari`](packages/kirari/README.md) | HTML highlighting, tokens, languages, and themes |
-| [`@vortexlabs/kirari-react`](packages/react/README.md) | React components and a streaming hook; requires React 19 |
-| [`@vortexlabs/kirari-rehype`](packages/rehype/README.md) | Highlighted code blocks in Markdown and MDX |
+| [`kirari`](packages/kirari/README.md) | HTML highlighting, tokens, languages, and themes |
+| [`kirari-react`](packages/react/README.md) | React components and a streaming hook; requires React 19 |
+| [`kirari-rehype`](packages/rehype/README.md) | Highlighted code blocks in Markdown and MDX |
 
 ## Guides
 

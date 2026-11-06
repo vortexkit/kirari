@@ -1,4 +1,4 @@
-# @vortexlabs/kirari-rehype
+# kirari-rehype
 
 Highlight code blocks in rendered Markdown and MDX with Kirari. This optional
 package converts Kirari tokens directly into structured HTML syntax tree nodes.
@@ -13,7 +13,7 @@ core package and does not change its bundle.
 ## Install
 
 ```sh
-npm install @vortexlabs/kirari @vortexlabs/kirari-rehype
+npm install kirari kirari-rehype
 ```
 
 The plugin uses your application's Kirari through a peer dependency.
@@ -28,8 +28,8 @@ import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import rehypeStringify from 'rehype-stringify'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript, typescript } from '@vortexlabs/kirari/languages'
+import rehypeKirari from 'kirari-rehype'
+import { javascript, typescript } from 'kirari/languages'
 
 const processor = unified()
   .use(remarkParse)
@@ -44,7 +44,7 @@ const html = String(await processor.process(source))
 Import the optional theme once from your application's stylesheet entry point:
 
 ```ts
-import '@vortexlabs/kirari/theme.css'
+import 'kirari/theme.css'
 ```
 
 The plugin adds `.kirari` to the enclosing `<pre>`, preserves existing properties
@@ -57,8 +57,8 @@ Pass the same plugin to the MDX compiler's `rehypePlugins` option:
 
 ```ts
 import { compile } from '@mdx-js/mdx'
-import rehypeKirari from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages'
+import rehypeKirari from 'kirari-rehype'
+import { javascript } from 'kirari/languages'
 
 const markdown = '```js\nconst answer = 42\n```'
 const compiled = await compile(markdown, {
@@ -85,8 +85,8 @@ unknown languages, inline code, and code with existing element children
 untouched. A `no-highlight` or `nohighlight` class on either `pre` or `code` also
 skips the block. Ordinary Markdown serialization still escapes their text.
 
-`@vortexlabs/kirari/markdown` serves a different purpose: it colors Markdown source itself,
-including the fence markers. Use `@vortexlabs/kirari-rehype` when rendering a Markdown
+`kirari/markdown` serves a different purpose: it colors Markdown source itself,
+including the fence markers. Use `kirari-rehype` when rendering a Markdown
 document into HTML or MDX.
 
 ## Lines and fence metadata
@@ -121,8 +121,8 @@ Use `lines: true` to wrap every highlighted block's lines even without metadata.
 The `lineClassName` callback can append your own classes:
 
 ```ts
-import type { Options } from '@vortexlabs/kirari-rehype'
-import { javascript } from '@vortexlabs/kirari/languages'
+import type { Options } from 'kirari-rehype'
+import { javascript } from 'kirari/languages'
 
 const options = {
   languages: [javascript],

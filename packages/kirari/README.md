@@ -7,7 +7,7 @@ definitions and 21 CSS-variable themes are available as separate imports.
 It is a lexical highlighter, not a parser.
 
 ```sh
-npm install @vortexlabs/kirari
+npm install kirari
 ```
 
 Documentation and playground: <https://kirari.sh>
@@ -17,8 +17,8 @@ Documentation and playground: <https://kirari.sh>
 In an application that supports CSS imports:
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import '@vortexlabs/kirari/theme.css'
+import { highlight } from 'kirari'
+import 'kirari/theme.css'
 
 const code = 'const count = 42'
 const html = `<pre class="kirari"><code>${highlight(code)}</code></pre>`
@@ -37,22 +37,22 @@ Bun, Node-specific APIs, or a DOM. Bun is only needed to develop this repository
 JavaScript is the default. Choose another language by importing its definition:
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import { python } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { python } from 'kirari/languages'
 
 const html = highlight('print(answer)', { language: python })
 ```
 
-The shared `@vortexlabs/kirari/languages` entry exports all 48 definitions. Named
+The shared `kirari/languages` entry exports all 48 definitions. Named
 imports work with bundler tree-shaking. Individual paths such as
-`@vortexlabs/kirari/languages/python` remain available to load only that grammar
+`kirari/languages/python` remain available to load only that grammar
 and its dependencies without a bundler.
 
 JSX and TSX have separate definitions, including markup and embedded expressions:
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import { tsx } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { tsx } from 'kirari/languages'
 
 const html = highlight('<Button disabled={busy}>{label}</Button>', { language: tsx })
 ```
@@ -60,8 +60,8 @@ const html = highlight('<Button disabled={busy}>{label}</Button>', { language: t
 For a Python-only bundle, import the language-independent core:
 
 ```ts
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { python } from '@vortexlabs/kirari/languages'
+import { tokenize, render } from 'kirari/core'
+import { python } from 'kirari/languages'
 
 const html = render(tokenize('answer = 42', python))
 ```
@@ -73,7 +73,7 @@ stylesheet. Add `class="kirari"` to your `<pre>` for the theme's background and
 base colors.
 
 ```js
-import '@vortexlabs/kirari/themes/github-light.css'
+import 'kirari/themes/github-light.css'
 ```
 
 | Light | Dark |
@@ -123,7 +123,7 @@ Classes also let you control font weight, italics, backgrounds, and decoration:
 ## Tokens and custom classes
 
 ```ts
-import { tokenize, render } from '@vortexlabs/kirari'
+import { tokenize, render } from 'kirari'
 
 const tokens = tokenize('const count = 1')
 // { type: 'variable', value: 'count', start: 6, end: 11 }
@@ -146,7 +146,7 @@ exactly. An empty source produces `[]` and empty HTML.
 
 Use these tokens directly when rendering through React or another UI framework.
 Kirari does not require a framework adapter or expose a raw-HTML callback. For
-React, the optional [`@vortexlabs/kirari-react`](https://github.com/vortexkit/kirari/blob/main/packages/react/README.md) package
+React, the optional [`kirari-react`](https://github.com/vortexkit/kirari/blob/main/packages/react/README.md) package
 provides a ready-made `<Code>` component and streaming hook.
 
 ## Optional integrations
@@ -155,17 +155,17 @@ These features use separate entrypoints and are absent from the default bundle:
 
 | Import | API | Purpose |
 | --- | --- | --- |
-| `@vortexlabs/kirari/stream` | `createTokenStream(language)` | Source-offset token patches for appended code |
-| `@vortexlabs/kirari/decorations` | `renderDecorated(tokens, options)` | Overlapping source ranges and optional line classes |
-| `@vortexlabs/kirari/registry` | `createRegistry(languages)` | Resolve names, aliases, extensions, and filenames from explicit registrations |
-| `@vortexlabs/kirari/markdown` | `createMarkdown(registry)` | Highlight registered languages inside Markdown fences |
+| `kirari/stream` | `createTokenStream(language)` | Source-offset token patches for appended code |
+| `kirari/decorations` | `renderDecorated(tokens, options)` | Overlapping source ranges and optional line classes |
+| `kirari/registry` | `createRegistry(languages)` | Resolve names, aliases, extensions, and filenames from explicit registrations |
+| `kirari/markdown` | `createMarkdown(registry)` | Highlight registered languages inside Markdown fences |
 
 ```ts
-import { tokenize } from '@vortexlabs/kirari/core'
-import { javascript } from '@vortexlabs/kirari/languages'
-import { renderDecorated } from '@vortexlabs/kirari/decorations'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import { createMarkdown } from '@vortexlabs/kirari/markdown'
+import { tokenize } from 'kirari/core'
+import { javascript } from 'kirari/languages'
+import { renderDecorated } from 'kirari/decorations'
+import { createRegistry } from 'kirari/registry'
+import { createMarkdown } from 'kirari/markdown'
 
 const registry = createRegistry([javascript])
 registry.resolve('src/example.js') // javascript; unknown names return undefined
@@ -195,16 +195,16 @@ See complete [streaming](https://github.com/vortexkit/kirari/blob/main/docs/stre
 [language integration](https://github.com/vortexkit/kirari/blob/main/docs/language-integration.md) contracts and examples.
 
 For highlighted code blocks in rendered Markdown or MDX, use the separate
-[`@vortexlabs/kirari-rehype` package](https://github.com/vortexkit/kirari/blob/main/packages/rehype/README.md). It accepts explicit language
+[`kirari-rehype` package](https://github.com/vortexkit/kirari/blob/main/packages/rehype/README.md). It accepts explicit language
 registrations and reuses Kirari token classes. The `createMarkdown()` API above
 highlights Markdown source; the Rehype plugin integrates with document rendering.
 
 ## Extend a language
 
 ```ts
-import { highlight } from '@vortexlabs/kirari'
-import { javascript } from '@vortexlabs/kirari/languages'
-import type { Language } from '@vortexlabs/kirari'
+import { highlight } from 'kirari'
+import { javascript } from 'kirari/languages'
+import type { Language } from 'kirari'
 
 const projectJavaScript: Language = {
   ...javascript,

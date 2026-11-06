@@ -1,0 +1,65 @@
+{
+  "name": "@vortexlabs/kirari-react",
+  "version": "1.2.0",
+  "description": "Renamed to kirari-react. This package re-exports kirari-react so existing imports keep working.",
+  "keywords": [
+    "react",
+    "react-component",
+    "syntax-highlighting",
+    "server-components"
+  ],
+  "author": "Ugi (https://ugi.dev)",
+  "license": "MIT",
+  "homepage": "https://kirari.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vortexkit/kirari.git",
+    "directory": "packages/compat-react"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "stream.js",
+    "stream.d.ts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    },
+    "./stream": {
+      "types": "./stream.d.ts",
+      "import": "./stream.js"
+    }
+  },
+  "scripts": {
+    "test": "bun test ./test",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun test ./test"
+  },
+  "dependencies": {
+    "kirari": "workspace:^",
+    "kirari-react": "workspace:^"
+  },
+  "peerDependencies": {
+    "@types/react": "^19",
+    "react": "^19"
+  },
+  "peerDependenciesMeta": {
+    "@types/react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "react": "^19.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

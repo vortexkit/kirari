@@ -5,11 +5,11 @@ Apply token patches as source chunks arrive.
 `createTokenStream(language)` takes chunks and returns patches. New input can change earlier tokens, so each patch replaces everything after an offset.
 
 ```ts
-import { render } from '@vortexlabs/kirari/core'
-import { createTokenStream } from '@vortexlabs/kirari/stream'
-import { javascript } from '@vortexlabs/kirari/languages'
-import type { Token } from '@vortexlabs/kirari/core'
-import type { TokenPatch } from '@vortexlabs/kirari/stream'
+import { render } from 'kirari/core'
+import { createTokenStream } from 'kirari/stream'
+import { javascript } from 'kirari/languages'
+import type { Token } from 'kirari/core'
+import type { TokenPatch } from 'kirari/stream'
 
 const stream = createTokenStream(javascript)
 const tokens: Token[] = []

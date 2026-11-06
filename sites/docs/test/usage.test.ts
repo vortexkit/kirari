@@ -6,7 +6,7 @@ test('exported examples preserve backticks, substitutions, and backslashes', () 
   for (const usage of ['js', 'react', 'markdown'] as const) {
     const code = usageCode({ source, name: 'javascript', theme: 'dracula', usage })
     expect(code).toContain('\\`hello \\${1 + 1}\\\\world\\`')
-    expect(code).toContain('@vortexlabs/kirari/themes/dracula.css')
+    expect(code).toContain('kirari/themes/dracula.css')
   }
 })
 

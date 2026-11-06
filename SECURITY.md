@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-Only the latest published version of `@vortexlabs/kirari`, `@vortexlabs/kirari-rehype`, and `@vortexlabs/kirari-react` receives security fixes. The three packages share one version.
+Only the latest published version of `kirari`, `kirari-rehype`, and `kirari-react` receives security fixes. The `@vortexlabs/kirari`, `@vortexlabs/kirari-rehype`, and `@vortexlabs/kirari-react` packages re-export them and receive the same fixes on update.
 
 ## Reporting a vulnerability
 

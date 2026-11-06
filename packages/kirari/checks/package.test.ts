@@ -1,14 +1,14 @@
 import { expect, test } from 'bun:test'
-import { highlight } from '@vortexlabs/kirari'
-import { tokenize, render } from '@vortexlabs/kirari/core'
-import { python } from '@vortexlabs/kirari/languages/python'
+import { highlight } from 'kirari'
+import { tokenize, render } from 'kirari/core'
+import { python } from 'kirari/languages/python'
 import { languages } from '../test/fixtures/all-languages.js'
-import { createTokenStream } from '@vortexlabs/kirari/stream'
-import { renderDecorated } from '@vortexlabs/kirari/decorations'
-import { createRegistry } from '@vortexlabs/kirari/registry'
-import { createMarkdown } from '@vortexlabs/kirari/markdown'
-import { javascript } from '@vortexlabs/kirari/languages/javascript'
-import * as sharedLanguages from '@vortexlabs/kirari/languages'
+import { createTokenStream } from 'kirari/stream'
+import { renderDecorated } from 'kirari/decorations'
+import { createRegistry } from 'kirari/registry'
+import { createMarkdown } from 'kirari/markdown'
+import { javascript } from 'kirari/languages/javascript'
+import * as sharedLanguages from 'kirari/languages'
 
 test('optional entrypoints work through public package exports', () => {
   const stream = createTokenStream(javascript)
@@ -33,7 +33,7 @@ test('built ESM exports run in Bun', () => {
 test('every opt-in language resolves through package exports', async () => {
   expect(Object.keys(sharedLanguages).sort()).toEqual(Object.keys(languages).sort())
   for (const name of Object.keys(languages)) {
-    const module = await import(`@vortexlabs/kirari/languages/${name}`)
+    const module = await import(`kirari/languages/${name}`)
     // biome-ignore lint/performance/noDynamicNamespaceImportAccess: This export-coverage test intentionally checks every language in the namespace.
     expect(sharedLanguages[name as keyof typeof sharedLanguages]).toBe(module[name])
     expect(module[name].name).toBe(name)
@@ -45,7 +45,7 @@ test('a named language import tree-shakes to the same bundle as its direct path'
   const entry = new URL('../.checks/language-import.ts', import.meta.url)
   const bundles: string[] = []
   for (const path of ['languages', 'languages/javascript']) {
-    await Bun.write(entry, `export { javascript } from '@vortexlabs/kirari/${path}'`)
+    await Bun.write(entry, `export { javascript } from 'kirari/${path}'`)
     const result = Bun.spawnSync(['bun', 'build', entry.pathname, '--target=browser', '--minify-whitespace', '--minify-syntax'])
     expect(result.exitCode).toBe(0)
     bundles.push(result.stdout.toString())
@@ -57,13 +57,13 @@ test('a named language import tree-shakes to the same bundle as its direct path'
 test('Node runs the built package with no document or Bun global', () => {
   const result = Bun.spawnSync(['node', '--input-type=module', '-e', `
     import assert from 'node:assert/strict';
-    import { highlight } from '@vortexlabs/kirari';
-    import { tokenize } from '@vortexlabs/kirari/core';
-    import { javascript } from '@vortexlabs/kirari/languages/javascript';
-    import { createTokenStream } from '@vortexlabs/kirari/stream';
-    import { renderDecorated } from '@vortexlabs/kirari/decorations';
-    import { createRegistry } from '@vortexlabs/kirari/registry';
-    import { createMarkdown } from '@vortexlabs/kirari/markdown';
+    import { highlight } from 'kirari';
+    import { tokenize } from 'kirari/core';
+    import { javascript } from 'kirari/languages/javascript';
+    import { createTokenStream } from 'kirari/stream';
+    import { renderDecorated } from 'kirari/decorations';
+    import { createRegistry } from 'kirari/registry';
+    import { createMarkdown } from 'kirari/markdown';
     assert.equal(typeof document, 'undefined');
     assert.equal(typeof Bun, 'undefined');
     assert.match(highlight('const count = 1'), /kirari-variable/);
@@ -80,7 +80,7 @@ test('Node runs the built package with no document or Bun global', () => {
     assert.deepEqual(tokens.map(t => [t.start, t.end]), [[0, 1], [1, 2], [2, 3]]);
     assert.equal(tokens.map(t => t.value).join(''), '🙂!');
     for (const name of ${JSON.stringify(Object.keys(languages))}) {
-      const module = await import('@vortexlabs/kirari/languages/' + name);
+      const module = await import('kirari/languages/' + name);
       const source = '🙂\\r\\n<div>{value}</div> /* unfinished';
       assert.equal(tokenize(source, module[name]).map(t => t.value).join(''), source);
     }

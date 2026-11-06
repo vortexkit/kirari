@@ -1,7 +1,7 @@
-# @vortexlabs/kirari-react
+# kirari-react
 
 Syntax highlighting for React 19, built on
-[`@vortexlabs/kirari`](https://github.com/vortexkit/kirari/blob/main/packages/kirari/README.md).
+[`kirari`](https://github.com/vortexkit/kirari/blob/main/packages/kirari/README.md).
 `<Code>` renders code as React elements and works in Server Components. Use the
 optional streaming hook for code that arrives in chunks.
 
@@ -10,7 +10,7 @@ optional streaming hook for code that arrives in chunks.
 ## Install
 
 ```sh
-npm install @vortexlabs/kirari @vortexlabs/kirari-react
+npm install kirari kirari-react
 ```
 
 Requires React 19. Kirari is a peer dependency.
@@ -18,9 +18,9 @@ Requires React 19. Kirari is a peer dependency.
 ## Usage
 
 ```tsx
-import { Code } from '@vortexlabs/kirari-react'
-import { typescript } from '@vortexlabs/kirari/languages'
-import '@vortexlabs/kirari/theme.css'
+import { Code } from 'kirari-react'
+import { typescript } from 'kirari/languages'
+import 'kirari/theme.css'
 
 export const CodeExample = () => (
   <Code language={typescript}>
@@ -61,10 +61,10 @@ Line numbers are CSS:
 ```tsx
 'use client'
 
-import { Code } from '@vortexlabs/kirari-react'
-import { useTokenStream } from '@vortexlabs/kirari-react/stream'
-import { javascript } from '@vortexlabs/kirari/languages'
-import '@vortexlabs/kirari/theme.css'
+import { Code } from 'kirari-react'
+import { useTokenStream } from 'kirari-react/stream'
+import { javascript } from 'kirari/languages'
+import 'kirari/theme.css'
 
 export const StreamExample = () => {
   const { tokens, write, reset } = useTokenStream(javascript)
@@ -88,7 +88,7 @@ arrives. The hook also returns `end()`, which closes the stream when it is compl
 - Changing `language` starts a new, empty stream.
 - After `end()`, call `reset()` before writing again.
 - `/stream` is a client module; `<Code>` is not.
-- Managing tokens yourself? Use `createTokenStream` from `@vortexlabs/kirari/stream` with `applyPatch(tokens, patch)`.
+- Managing tokens yourself? Use `createTokenStream` from `kirari/stream` with `applyPatch(tokens, patch)`.
 
 ## License
 

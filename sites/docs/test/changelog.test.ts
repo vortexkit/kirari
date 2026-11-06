@@ -155,7 +155,7 @@ test('a package filter shows only that package and marks its link current', () =
   const html = renderChangelog({ releases, active: 'kirari-rehype' })
   expect(html.match(/<h2 /g)).toHaveLength(releases.filter(entry => entry.package === 'kirari-rehype').length)
   expect(html).not.toContain('id="kirari-1.0.4"')
-  expect(html).toMatch(/aria-current="page" href="\/changelog\/?\?package=kirari-rehype"[^>]*>kirari-rehype<span[^>]*>3<\/span>/)
+  expect(html).toMatch(/aria-current="page" href="\/changelog\/?\?package=kirari-rehype"[^>]*>kirari-rehype<span[^>]*>4<\/span>/)
   expect(renderChangelog({ releases })).toMatch(/aria-current="page" href="\/changelog\/?"/)
 })
 
@@ -163,7 +163,7 @@ test('each breaking change gets a prompt that quotes it and links the Markdown c
   const second = '#### Removed `c`\n\nUse `d`.\n\n**How to migrate**\n\n1. Replace `c()` with `d()`.'
   const prompts = migrationPrompts(parse(frontmatter() + body({ breaking: `${breaking}\n\n${second}`, fixes: '- Fixed.' })))
   expect(prompts).toHaveLength(2)
-  expect(prompts[0]).toStartWith("I'm upgrading @vortexlabs/kirari to 1.1.0 or later.")
+  expect(prompts[0]).toStartWith("I'm upgrading kirari to 1.1.0 or later.")
   expect(prompts[0]).toEndWith(breaking)
   expect(prompts[0]).toContain('https://kirari.sh/changelog/kirari.md')
   expect(prompts[1]).toEndWith(second)
@@ -184,7 +184,7 @@ test('the Markdown changelog lists published releases newest first without front
   const markdown = await readChangelogMarkdown('kirari-react')
   const versions = [...markdown.matchAll(/^## (\d+\.\d+\.\d+) \(\d{4}-\d{2}-\d{2}\)$/gm)].map(match => match[1])
   expect(versions).toEqual(releases.filter(entry => entry.package === 'kirari-react').map(entry => entry.version))
-  expect(markdown).toStartWith('# @vortexlabs/kirari-react changelog')
+  expect(markdown).toStartWith('# kirari-react changelog')
   expect(markdown).toContain('**How to migrate**')
   expect(markdown).not.toMatch(/^package: /m)
 })

@@ -1,10 +1,10 @@
 # Decorations
 
-`@vortexlabs/kirari/decorations` adds optional range classes and line wrappers to an existing token array. It works on the server without a DOM and keeps the normal `kirari-*` syntax classes. Importing the core renderer does not load this module.
+`kirari/decorations` adds optional range classes and line wrappers to an existing token array. It works on the server without a DOM and keeps the normal `kirari-*` syntax classes. Importing the core renderer does not load this module.
 
 ```ts
-import { tokenize } from '@vortexlabs/kirari'
-import { renderDecorated } from '@vortexlabs/kirari/decorations'
+import { tokenize } from 'kirari'
+import { renderDecorated } from 'kirari/decorations'
 
 const source = 'const answer = 42\n'
 const html = renderDecorated(tokenize(source), {
@@ -38,7 +38,7 @@ interface DecoratedRenderOptions extends RenderOptions {
 renderDecorated(tokens: readonly Token[], options?: DecoratedRenderOptions): string
 ```
 
-`Decoration` and `DecoratedRenderOptions` are exported from `@vortexlabs/kirari/decorations`. The inherited `classes` and `className` options behave like `render()`: mapped classes and callback classes follow the built-in syntax class. The callback receives each original token object exactly once, even when a range or newline splits that token into several output spans. Range classes follow the custom syntax classes. Overlapping ranges combine classes in the order supplied; class names are not deduplicated.
+`Decoration` and `DecoratedRenderOptions` are exported from `kirari/decorations`. The inherited `classes` and `className` options behave like `render()`: mapped classes and callback classes follow the built-in syntax class. The callback receives each original token object exactly once, even when a range or newline splits that token into several output spans. Range classes follow the custom syntax classes. Overlapping ranges combine classes in the order supplied; class names are not deduplicated.
 
 ## Offsets and validation
 

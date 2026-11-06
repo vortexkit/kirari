@@ -1,0 +1,46 @@
+{
+  "name": "@vortexlabs/kirari-rehype",
+  "version": "1.1.0",
+  "description": "Renamed to kirari-rehype. This package re-exports kirari-rehype so existing imports keep working.",
+  "keywords": [
+    "rehype",
+    "rehype-plugin",
+    "mdx",
+    "syntax-highlighting"
+  ],
+  "author": "Ugi (https://ugi.dev)",
+  "license": "MIT",
+  "homepage": "https://kirari.sh",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vortexkit/kirari.git",
+    "directory": "packages/compat-rehype"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "import": "./index.js"
+    }
+  },
+  "scripts": {
+    "test": "bun test ./test",
+    "typecheck": "tsc --noEmit",
+    "check": "bun run typecheck && bun test ./test"
+  },
+  "dependencies": {
+    "kirari": "workspace:^",
+    "kirari-rehype": "workspace:^"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

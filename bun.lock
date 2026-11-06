@@ -14,30 +14,64 @@
     "packages/benchmarks": {
       "name": "@vortexlabs/kirari-benchmarks",
       "devDependencies": {
-        "@vortexlabs/kirari": "workspace:*",
+        "kirari": "workspace:*",
+      },
+    },
+    "packages/compat": {
+      "name": "@vortexlabs/kirari",
+      "version": "1.2.0",
+      "dependencies": {
+        "kirari": "workspace:^",
+      },
+    },
+    "packages/compat-react": {
+      "name": "@vortexlabs/kirari-react",
+      "version": "1.2.0",
+      "dependencies": {
+        "kirari": "workspace:^",
+        "kirari-react": "workspace:^",
+      },
+      "devDependencies": {
+        "@types/react": "^19.3.0",
+        "react": "^19.3.1",
+      },
+      "peerDependencies": {
+        "@types/react": "^19",
+        "react": "^19",
+      },
+      "optionalPeers": [
+        "@types/react",
+      ],
+    },
+    "packages/compat-rehype": {
+      "name": "@vortexlabs/kirari-rehype",
+      "version": "1.1.0",
+      "dependencies": {
+        "kirari": "workspace:^",
+        "kirari-rehype": "workspace:^",
       },
     },
     "packages/kirari": {
-      "name": "@vortexlabs/kirari",
-      "version": "1.1.4",
+      "name": "kirari",
+      "version": "1.2.0",
       "devDependencies": {
         "fast-check": "^4.10.2",
       },
     },
     "packages/react": {
-      "name": "@vortexlabs/kirari-react",
-      "version": "1.1.1",
+      "name": "kirari-react",
+      "version": "1.2.0",
       "devDependencies": {
         "@happy-dom/global-registrator": "^20.14.6",
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
-        "@vortexlabs/kirari": "workspace:*",
+        "kirari": "workspace:*",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
       },
       "peerDependencies": {
         "@types/react": "^19",
-        "@vortexlabs/kirari": "^1.0.0",
+        "kirari": "^1.2.0",
         "react": "^19",
       },
       "optionalPeers": [
@@ -45,8 +79,8 @@
       ],
     },
     "packages/rehype": {
-      "name": "@vortexlabs/kirari-rehype",
-      "version": "1.0.2",
+      "name": "kirari-rehype",
+      "version": "1.1.0",
       "dependencies": {
         "@types/hast": "^3.0.5",
       },
@@ -54,7 +88,7 @@
         "@mdx-js/mdx": "^3.1.1",
         "@types/react": "^19.3.0",
         "@types/react-dom": "^19.3.0",
-        "@vortexlabs/kirari": "workspace:*",
+        "kirari": "workspace:*",
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
         "rehype-sanitize": "^6.0.0",
@@ -64,16 +98,16 @@
         "unified": "^11.0.5",
       },
       "peerDependencies": {
-        "@vortexlabs/kirari": "^1.0.0",
+        "kirari": "^1.2.0",
       },
     },
     "sites/docs": {
       "name": "@vortexlabs/kirari-docs",
       "dependencies": {
-        "@vortexlabs/kirari": "workspace:*",
-        "@vortexlabs/kirari-rehype": "workspace:*",
         "classnames": "^2.5.1",
         "gsap": "^3.15.0",
+        "kirari": "workspace:*",
+        "kirari-rehype": "workspace:*",
         "next": "16.4.2",
         "react": "19.3.1",
         "react-dom": "19.3.1",
@@ -305,15 +339,15 @@
 
     "@ungap/structured-clone": ["@ungap/structured-clone@1.4.0", "", {}, "sha512-1mEZtMKPM09vDmQt5y7YvmN2+DFTP7Tg0EWXdic8/C6VRnpb33e4ghisCIE3WZjsE2N8mf+QV1Zqh7ZFYLWInQ=="],
 
-    "@vortexlabs/kirari": ["@vortexlabs/kirari@workspace:packages/kirari"],
+    "@vortexlabs/kirari": ["@vortexlabs/kirari@workspace:packages/compat"],
 
     "@vortexlabs/kirari-benchmarks": ["@vortexlabs/kirari-benchmarks@workspace:packages/benchmarks"],
 
     "@vortexlabs/kirari-docs": ["@vortexlabs/kirari-docs@workspace:sites/docs"],
 
-    "@vortexlabs/kirari-react": ["@vortexlabs/kirari-react@workspace:packages/react"],
+    "@vortexlabs/kirari-react": ["@vortexlabs/kirari-react@workspace:packages/compat-react"],
 
-    "@vortexlabs/kirari-rehype": ["@vortexlabs/kirari-rehype@workspace:packages/rehype"],
+    "@vortexlabs/kirari-rehype": ["@vortexlabs/kirari-rehype@workspace:packages/compat-rehype"],
 
     "acorn": ["acorn@8.19.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-oJlA3XiRm7Cyk6qFD2Jn8ak9B7jSy0qy00ADO3+8dpT0LSjFihQYv4C02LFCSYJV3Q37xYwwRy5m+IpIiUzqWw=="],
 
@@ -432,6 +466,12 @@
     "jju": ["jju@1.4.0", "", {}, "sha512-8wb9Yw966OSxApiCt0K3yNJL8pnNeIv+OEq2YMidz4FKP6nonSRoOXc80iXY4JaN2FC11B9qsNmDsm+ZOfMROA=="],
 
     "jsonc-parser": ["jsonc-parser@3.3.1", "", {}, "sha512-HUgH65KyejrUFPvHFPbqOY0rsFip3Bo5wb4ngvdi1EpCYWUQDC5V+Y7mZws+DLkr4M//zQJoanu1SP+87Dv1oQ=="],
+
+    "kirari": ["kirari@workspace:packages/kirari"],
+
+    "kirari-react": ["kirari-react@workspace:packages/react"],
+
+    "kirari-rehype": ["kirari-rehype@workspace:packages/rehype"],
 
     "launch-editor": ["launch-editor@2.14.2", "", { "dependencies": { "picocolors": "^1.1.1", "shell-quote": "^1.10.0" } }, "sha512-NHJEb30MGBCkmZXLZwz25t37QR4aY03ZzPYUJXOJaOa92uWwExI9SBQUuIznBYc1xkD7cJNGX7oc3Nl3sq2kQQ=="],
 

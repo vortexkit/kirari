@@ -1,23 +1,23 @@
 # Installation
 
-Kirari is published on npm under the `@vortexlabs` scope.
+Kirari is published on npm as `kirari`. Projects that installed `@vortexlabs/kirari` keep working: that package re-exports `kirari`.
 
 ```sh
-npm install @vortexlabs/kirari
-# or: pnpm add / yarn add / bun add @vortexlabs/kirari
+npm install kirari
+# or: pnpm add / yarn add / bun add kirari
 ```
 
 For Markdown and MDX pipelines, add the Rehype integration. It uses your
 application's Kirari through a peer dependency:
 
 ```sh
-npm install @vortexlabs/kirari @vortexlabs/kirari-rehype
+npm install kirari kirari-rehype
 ```
 
 For React 19, add the React integration:
 
 ```sh
-npm install @vortexlabs/kirari @vortexlabs/kirari-react
+npm install kirari kirari-react
 ```
 
 Documentation: <https://kirari.sh>
@@ -29,9 +29,9 @@ Workspace applications can depend on the local packages directly:
 ```json
 {
   "dependencies": {
-    "@vortexlabs/kirari": "workspace:*",
-    "@vortexlabs/kirari-rehype": "workspace:*",
-    "@vortexlabs/kirari-react": "workspace:*"
+    "kirari": "workspace:*",
+    "kirari-rehype": "workspace:*",
+    "kirari-react": "workspace:*"
   }
 }
 ```

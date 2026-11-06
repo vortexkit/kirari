@@ -3,7 +3,7 @@
 Kirari turns source code into tokens, and tokens into escaped HTML. No DOM, no runtime dependencies, and every color comes from your CSS.
 
 ```sh
-npm install @vortexlabs/kirari
+npm install kirari
 ```
 
 - [Get started](/docs/#installation): Install and highlight your first snippet.
@@ -17,19 +17,19 @@ The API has three core functions: `tokenize` splits source into typed tokens wit
 Install from npm and highlight your first snippet.
 
 ```sh
-npm install @vortexlabs/kirari
+npm install kirari
 
 # or
-pnpm add @vortexlabs/kirari
-yarn add @vortexlabs/kirari
-bun add @vortexlabs/kirari
+pnpm add kirari
+yarn add kirari
+bun add kirari
 ```
 
 ### Highlight your first snippet
 
 ```js
-import { highlight } from '@vortexlabs/kirari'
-import '@vortexlabs/kirari/theme.css'
+import { highlight } from 'kirari'
+import 'kirari/theme.css'
 
 const html = highlight('const message = "Hello, world!"')
 const block = `<pre class="kirari"><code>${html}</code></pre>`

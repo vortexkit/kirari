@@ -5,8 +5,8 @@ Add source ranges and line wrappers to highlighted HTML.
 Add classes to source ranges without touching syntax tokens. Optionally wrap each line for line numbers or annotations.
 
 ```js
-import { tokenize } from '@vortexlabs/kirari'
-import { renderDecorated } from '@vortexlabs/kirari/decorations'
+import { tokenize } from 'kirari'
+import { renderDecorated } from 'kirari/decorations'
 
 const source = 'const answer = 42\nconsole.log(answer)'
 const html = renderDecorated(tokenize(source), {

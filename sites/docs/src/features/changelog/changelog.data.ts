@@ -19,17 +19,17 @@ export const categories = [
 export const packages = [
 	{
 		id: 'kirari',
-		name: '@vortexlabs/kirari',
+		name: 'kirari',
 		directory: 'kirari',
 	},
 	{
 		id: 'kirari-react',
-		name: '@vortexlabs/kirari-react',
+		name: 'kirari-react',
 		directory: 'react',
 	},
 	{
 		id: 'kirari-rehype',
-		name: '@vortexlabs/kirari-rehype',
+		name: 'kirari-rehype',
 		directory: 'rehype',
 	},
 ] as const

@@ -8,6 +8,6 @@
     "check": "tsc --noEmit && bun test ./test"
   },
   "devDependencies": {
-    "@vortexlabs/kirari": "workspace:*"
+    "kirari": "workspace:*"
   }
 }

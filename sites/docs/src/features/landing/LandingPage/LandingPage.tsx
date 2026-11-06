@@ -1,5 +1,5 @@
-import { highlight } from '@vortexlabs/kirari'
-import { css, typescript } from '@vortexlabs/kirari/languages'
+import { highlight } from 'kirari'
+import { css, typescript } from 'kirari/languages'
 import { languageEntries } from '@/lib/languages'
 import { docsPath, routes } from '@/lib/navigation'
 import { site } from '@/lib/site'
@@ -45,14 +45,14 @@ const cards = [
 	'catppuccin-mocha',
 	'solarized-light',
 ].map(theme)
-const themeCSS = `@import '@vortexlabs/kirari/themes/github-light.css';
+const themeCSS = `@import 'kirari/themes/github-light.css';
 
 /* Then tweak any token you like */
 .my-code {
   --kirari-keyword: #7a3fd1;
 }`
-const quickStart = `import { highlight } from '@vortexlabs/kirari'
-import '@vortexlabs/kirari/theme.css'
+const quickStart = `import { highlight } from 'kirari'
+import 'kirari/theme.css'
 
 const html = highlight('const answer = 42')`
 const languageCount = languageEntries.length
