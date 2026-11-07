@@ -11,6 +11,6 @@ test('exposes the same entry points as kirari-rehype', async () => {
 
 test('re-exports the same objects as kirari-rehype, including the default plugin', () => {
   expect(Object.keys(scoped).sort()).toEqual(Object.keys(rehype).sort())
-  for (const key of Object.keys(rehype)) expect(scoped[key as keyof typeof scoped]).toBe(rehype[key as keyof typeof rehype])
+  for (const [key, value] of Object.entries(rehype)) expect(Reflect.get(scoped, key)).toBe(value)
   expect(scoped.default).toBe(rehype.default)
 })

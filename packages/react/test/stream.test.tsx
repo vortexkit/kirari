@@ -22,10 +22,11 @@ for (const language of [javascript, python] as Language[]) {
   })
 }
 
+const Streamed = () => {
+  const { tokens } = useTokenStream(javascript)
+  return <Code tokens={tokens} />
+}
+
 test('the hook starts empty and its tokens render through Code', () => {
-  const Streamed = () => {
-    const { tokens } = useTokenStream(javascript)
-    return <Code tokens={tokens} />
-  }
   expect(renderToStaticMarkup(<Streamed />)).toBe('<pre class="kirari"><code></code></pre>')
 })
