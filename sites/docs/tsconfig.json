@@ -9,7 +9,7 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "types": [
-      "bun"
+      "bun-types"
     ],
     "lib": [
       "ES2022",
