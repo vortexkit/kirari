@@ -16,7 +16,7 @@ test('exposes the same entry points as kirari', () => {
 
 test('re-exports the same objects, so both names share one registry and one set of languages', async () => {
   expect(Object.keys(scoped).sort()).toEqual(Object.keys(core).sort())
-  for (const key of Object.keys(core)) expect(scoped[key as keyof typeof scoped]).toBe(core[key as keyof typeof core])
+  for (const [key, value] of Object.entries(core)) expect(Reflect.get(scoped, key)).toBe(value)
   expect(scopedLanguages).toEqual(coreLanguages)
   for (const entry of ['core', 'stream', 'decorations', 'registry', 'markdown']) {
     const [left, right] = await Promise.all([import(`@vortexlabs/kirari/${entry}`), import(`kirari/${entry}`)])

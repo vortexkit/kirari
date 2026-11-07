@@ -18,15 +18,18 @@ beforeAll(async () => {
 })
 afterAll(() => GlobalRegistrator.unregister())
 
+type Handle = { current?: StreamedTokens }
+
+const Streamed = ({ language, handle }: { language: Language, handle: Handle }) => {
+  handle.current = useTokenStream(language)
+  return <Code language={language} tokens={handle.current.tokens} />
+}
+
 const mount = (language: Language) => {
   const container = document.createElement('div')
   let root!: Root
-  const handle: { current?: StreamedTokens } = {}
-  const Streamed = ({ language }: { language: Language }) => {
-    handle.current = useTokenStream(language)
-    return <Code language={language} tokens={handle.current.tokens} />
-  }
-  const render = (language: Language) => act(() => root.render(<StrictMode><Streamed language={language} /></StrictMode>))
+  const handle: Handle = {}
+  const render = (language: Language) => act(() => root.render(<StrictMode><Streamed language={language} handle={handle} /></StrictMode>))
   act(() => { root = createRoot(container) })
   render(language)
   return { container, handle, render, unmount: () => act(() => root.unmount()) }

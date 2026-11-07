@@ -35,11 +35,11 @@
     "release:kirari-react": "bash ./bin/release.sh --filter react",
     "lint": "biome lint"
   },
-  "packageManager": "bun@1.3.11",
+  "packageManager": "bun@1.4.4",
   "devDependencies": {
-    "@biomejs/biome": "2.5.15",
+    "@biomejs/biome": "2.6.6",
     "@changesets/cli": "^3.0.3",
-    "@types/bun": "^1.4.3",
+    "@types/bun": "^1.4.4",
     "typescript": "^7.0.2"
   }
 }
