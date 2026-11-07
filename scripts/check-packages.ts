@@ -69,7 +69,7 @@ try {
   }
   const installed = JSON.parse(await readFile(join(consumer, 'node_modules/kirari-rehype/package.json'), 'utf8'))
   assert.ok(installed.dependencies['@types/hast'], 'Public declarations require HAST types')
-  assert.ok(installed.peerDependencies['kirari'], 'The integration must use the host Kirari')
+  assert.ok(installed.peerDependencies.kirari, 'The integration must use the host Kirari')
   const reactManifest = JSON.parse(await readFile(join(consumer, 'node_modules/kirari-react/package.json'), 'utf8'))
   for (const peer of ['kirari', 'react']) {
     assert.ok(reactManifest.peerDependencies[peer], `The React integration must use the host ${peer}`)
